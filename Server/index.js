@@ -17,8 +17,8 @@ app.use("/edit", require('./routes/ServicesRoutes/editService'))
 app.use("/delete", require('./routes/ServicesRoutes/deleteService'))
 
 // ! Choices routes
-app.use("/getChoices", require('./routes/ChoicesRoutes/getChoices'))
-app.use("/addChoices", require('./routes/ChoicesRoutes/addChoices'))
+app.use("/getChoices", require('./routes/ChoicesRoutes/getChoice'))
+app.use("/addChoices", require('./routes/ChoicesRoutes/addChoice'))
 app.use("/editChoices", require('./routes/ChoicesRoutes/editChoice'))
 app.use("/deleteChoices", require('./routes/ChoicesRoutes/deleteChoice'));
 

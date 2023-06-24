@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const pool = require('../../db');
 
-router.get("/choices", async (req, res) => {
+router.get("/getChoice", async (req, res) => {
     const sql = `SELECT * FROM choices`;
 
     try {

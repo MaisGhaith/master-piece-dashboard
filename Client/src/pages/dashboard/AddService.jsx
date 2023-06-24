@@ -42,47 +42,7 @@ function AddService() {
         setImg(fileString);
     };
 
-    // Function to handle form submission
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
 
-    //     try {
-    //         const data = { title: title, image: img };
-    //         const response = await axios.post(
-    //             "http://localhost:8181/dash/addService",
-    //             data
-    //         );
-    //         console.log(response.data);
-
-    //         const addedService = {
-    //             id: response.data.id,
-    //             title,
-    //             image: img.name,
-    //         };
-
-    //         setNewService(addedService);
-    //         // Clear the form
-    //         setTitle("");
-    //         setImg("");
-
-
-    //     } catch (error) {
-    //         console.error("Failed to send data to the database:", error.message);
-    //     }
-
-    //     const newService = {
-    //         id: showServices.length + 1,
-    //         title,
-    //         image: img.name,
-    //     };
-
-    //     updatedServicesRef.current = [...showServices, newService];
-
-    //     // Clear the form
-    //     setTitle('');
-    //     setImg('');
-
-    // };
     const handleSubmit = async (event) => {
         event.preventDefault();
 

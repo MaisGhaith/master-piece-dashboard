@@ -9,7 +9,7 @@ import {
 import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 import AddService from "./pages/dashboard/AddService";
-import ServicrsChoices from "./pages/dashboard/ServicrsChoices";
+import ServicrsChoices from "./pages/dashboard/ServicesChoices";
 
 
 const icon = {
