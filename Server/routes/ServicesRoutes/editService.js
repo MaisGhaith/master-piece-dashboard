@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const pool = require('../db');
+const pool = require('../../db');
 
 router.put("/editService/:id", async (req, res) => {
 
@@ -14,7 +14,7 @@ router.put("/editService/:id", async (req, res) => {
 
         res.json(updateService.rows);
     } catch (error) {
-        res.status(500).json({ error: "can't edit data" })
+        res.status(500).json({ error: "can't edit service" })
     }
 });
 

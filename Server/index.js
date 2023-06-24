@@ -10,11 +10,17 @@ app.use(express.json({ limit: '50mb' }));
 app.use(cors()) // to make our backend interact with frontend
 
 // * Routes //
-app.use("/dash", require('./routes/addService'))
-app.use("/services", require('./routes/getServices'))
-app.use("/edit", require('./routes/editService'))
-app.use("/delete", require('./routes/deleteService'))
+// ! services Routes
+app.use("/dash", require('./routes/ServicesRoutes/addService'))
+app.use("/services", require('./routes/ServicesRoutes/getServices'))
+app.use("/edit", require('./routes/ServicesRoutes/editService'))
+app.use("/delete", require('./routes/ServicesRoutes/deleteService'))
 
+// ! Choices routes
+app.use("/getChoices", require('./routes/ChoicesRoutes/getChoices'))
+app.use("/addChoices", require('./routes/ChoicesRoutes/addChoices'))
+app.use("/editChoices", require('./routes/ChoicesRoutes/editChoice'))
+app.use("/deleteChoices", require('./routes/ChoicesRoutes/deleteChoice'));
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

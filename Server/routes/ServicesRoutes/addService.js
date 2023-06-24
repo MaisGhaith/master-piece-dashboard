@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const pool = require('../db');
+const pool = require('../../db');
 
 router.post("/addService", async (req, res) => {
     try {
@@ -31,7 +31,7 @@ router.post("/addService", async (req, res) => {
         }
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Server error to add service");
     }
 });
 

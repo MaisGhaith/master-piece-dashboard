@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../db');
+const pool = require('../../db');
 
 router.put('/deleteService/:id', async (req, res) => {
     const { id } = req.params;
