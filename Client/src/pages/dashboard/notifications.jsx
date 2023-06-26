@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// Notifications.js
+import React from 'react';
 import useFunctions from './ChoicesFunctions';
 
 export function Notifications() {
@@ -10,20 +11,15 @@ export function Notifications() {
     deleteChoice,
     editingChoice,
     editedChoice,
+    editedPrice,
+    newChoice,
+    newPrice,
     setEditedChoice,
+    setEditedPrice,
+    setNewChoice,
+    setNewPrice,
     addChoice,
   } = useFunctions();
-
-  const [newChoice, setNewChoice] = useState('');
-  const [newPrice, setNewPrice] = useState('');
-
-  const handleAdd = () => {
-    if (newChoice && newPrice) {
-      addChoice(newChoice, newPrice);
-      setNewChoice('');
-      setNewPrice('');
-    }
-  };
 
   return (
     <div>
@@ -35,6 +31,11 @@ export function Notifications() {
                 type="text"
                 value={editedChoice}
                 onChange={(e) => setEditedChoice(e.target.value)}
+              />
+              <input
+                type="text"
+                value={editedPrice}
+                onChange={(e) => setEditedPrice(e.target.value)}
               />
               <button onClick={handleSave}>Save</button>
               <button onClick={handleCancel}>Cancel</button>
@@ -62,7 +63,7 @@ export function Notifications() {
           onChange={(e) => setNewPrice(e.target.value)}
           placeholder="Price"
         />
-        <button onClick={handleAdd}>Add Choice</button>
+        <button onClick={addChoice}>Add Choice</button>
       </div>
     </div>
   );

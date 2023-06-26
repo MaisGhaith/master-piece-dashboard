@@ -7,18 +7,21 @@ router.post("/addChoice/:service_id", async (req, res) => {
         const { service_id } = req.params; // get this from services table
         const { choice, price } = req.body;
         console.log(service_id)
-
-        //* 2 check if service exists (if service exists then throw an error)
+        console.log(price)
+        //* 2 check if choice exists (if service exists then throw an error)
         const sql = "SELECT * FROM choices WHERE choice = $1";
         const choices = await pool.query(sql, [choice])
-
+        console.log(choices)
+        console.log(price, choice)
         if (choices.rows.length !== 0) {
             res.status(201).json(["This choice already exists", choices.rows])
+            console.log("Mais")
         } else {
 
             //* 3 check if inputs are empty 
             if (!choice || !price) {
                 res.status(400).json("Choice and price is a must to add")
+                console.log("drobi")
             } else {
                 //* 4 enter the new choice indise our db
 

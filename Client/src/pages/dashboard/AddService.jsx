@@ -8,10 +8,29 @@ import {
     Typography,
 } from "@material-tailwind/react";
 
-
+import useFunctions from "./ChoicesFunctions";
 // import { ExclamationCircleIcon } from "@heroicons/react/solid";
 
 function AddService() {
+    const {
+        getAllChoices,
+        handleEdit,
+        handleSave,
+        handleCancel,
+        deleteChoice,
+        editingChoice,
+        editedChoice,
+        editedPrice,
+        newChoice,
+        newPrice,
+        setEditedChoice,
+        setEditedPrice,
+        setNewChoice,
+        setNewPrice,
+        handleAddChoice,
+        toggleModal,
+        addChoice,
+    } = useFunctions();
 
     const [img, setImg] = useState("");
     const [title, setTitle] = useState("");
@@ -191,6 +210,47 @@ function AddService() {
         });
     };
 
+
+    // ! add choice modal 
+    const [showModal, setShowModal] = useState(false);
+    const [service_id, setServiceId] = useState(null);
+
+    const addChoiceModal = (serviceId) => {
+        setServiceId(serviceId);
+        setShowModal(true);
+        console.log(serviceId)
+    };
+
+    const closeAddChoiceModal = () => {
+        setShowModal(false);
+    }
+
+    // const [getAllChoices, setGetAllChoices] = useState([]);
+    // const addChoice = async () => {
+    //     try {
+    //         const data = {
+    //             choice: newChoice,
+    //             price: newPrice,
+    //             service_id: service.id, // قم بإضافة service_id هنا في الجسم (body)
+    //         };
+    //         const response = await axios.post(`http://localhost:8181/addChoices/addChoice/${service.id}`, data);
+    //         // console.log(response.data);
+
+    //         const addedChoice = {
+    //             id: response.data.id,
+    //             choice: response.data.choice,
+    //             price: response.data.price,
+    //         };
+
+    //         setGetAllChoices((prevChoices) => [...prevChoices, addedChoice]);
+    //         setNewChoice('');
+    //         setNewPrice('');
+    //     } catch (error) {
+    //         console.error('Failed to send choice data to the database:', error.message);
+    //     }
+    // };
+
+
     return (
 
         <Card className="mt-12 mb-8 flex flex-col gap-12">
@@ -280,8 +340,6 @@ function AddService() {
                 </div>
             </form>
 
-            {/* tryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy */}
-
 
             {/* Service List */}
 
@@ -297,20 +355,15 @@ function AddService() {
                             <img
                                 className="transition-all duration-300 ease-in-out absolute w-full h-full top-5 left-0 bg-cover bg-no-repeat rounded-lg"
                                 style={{
-                                    backgroundImage: `url(${service.img})`,
+                                    backgroundImage: `url(${service.image})`,
                                     zIndex: -1,
                                 }}
                                 src={service.image}
                                 alt={service.title}
                             ></img>
                         </div>
-                        {/* <img
-                            className="w-full h-48 object-cover"
-                            src={service.image}
-                            alt={service.title}
-                        /> */}
+
                         <div className="pt-10">
-                            {/* <h4 className="font-bold text-lg">{service.title}</h4> */}
                             <div className="flex flex-col items-center">
                                 <h2 className="text-lg font-body text-black font-semibold">{service.title}</h2>
                                 <div className="flex justify-between items-center flex-col">
@@ -321,35 +374,114 @@ function AddService() {
                                         <button onClick={() => handleDelete(service.id)} className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
                                             حذف الخدمة
                                         </button>
+                                        {service.id}
                                         {/* <button className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
                                              الخدمة
                                         </button> */}
-                                        <button className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                        <button onClick={() => addChoiceModal(service.id)} className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
                                             إضافة خيارات
                                         </button>
+
                                     </div>
                                 </div>
                             </div>
-
-
-                            {/* <div className="mt-2 flex justify-between">
-                                <button
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    onClick={() => openModal(service)}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    onClick={() => handleDelete(service.id)}
-                                >
-                                    delete
-                                </button>
-                            </div> */}
                         </div>
+                        {showModal && (
+                            <div
+                                id="authentication-modal"
+                                tabIndex={-1}
+                                aria-hidden="true"
+                                className="fixed top-0 left-0 right-0 z-50 w-full h-screen flex items-center justify-center"
+                            >
+                                <div className="relative bg-white rounded-lg shadow">
+                                    <button
+                                        type="button"
+                                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                                        onClick={addChoiceModal}
+                                    >
+                                        <svg
+                                            aria-hidden="true"
+                                            className="w-5 h-5"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        <span className="sr-only">Close modal</span>
+                                    </button>
+                                    <div className="px-6 py-6 lg:px-8">
+                                        <form className="space-y-6" action="#">
+                                            <div>
+                                                <input
+                                                    type="hidden"
+                                                    name="service_id"
+                                                    value={service_id}
+                                                    onChange={(e) => setServiceId(e.target.value)}
+                                                    service_id={service_id}
+                                                />
+
+                                            </div>
+                                            <div>
+                                                <label
+                                                    htmlFor="email"
+                                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                                >
+                                                    أضف الخيار
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="choice"
+                                                    id="choice"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                                    placeholder="الخيار"
+                                                    required=""
+                                                    value={newChoice}
+                                                    onChange={(e) => setNewChoice(e.target.value)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label
+                                                    htmlFor="choice"
+                                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                                >
+                                                    أضف السعر
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="price"
+                                                    id="price"
+                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                                    placeholder="السعر"
+                                                    required=""
+                                                    value={newPrice}
+                                                    onChange={(e) => setNewPrice(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                                <button onClick={closeAddChoiceModal} data-modal-hide="bottom-right-modal" type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">إلغاء</button>
+                                                <button onClick={() => addChoice(service_id)} data-modal-hide="bottom-right-modal" type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">إضافة </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
+
                 ))}
             </div>
+            <>
+
+                {/* Main modal */}
+
+            </>
+
+            {/* Add choices  */}
 
 
             {/* Edit Service Modal */}
