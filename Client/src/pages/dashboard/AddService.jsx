@@ -8,9 +8,11 @@ import {
     Typography,
 } from "@material-tailwind/react";
 
+
 // import { ExclamationCircleIcon } from "@heroicons/react/solid";
 
 function AddService() {
+
     const [img, setImg] = useState("");
     const [title, setTitle] = useState("");
     const [open, setOpen] = useState(false);
@@ -217,7 +219,7 @@ function AddService() {
                     </div>
                 </div>
 
-                {/* Image input */}
+
                 <div className="mb-6">
                     <label
                         htmlFor="image"
@@ -238,10 +240,6 @@ function AddService() {
                                 </div>
                             ) : (
                                 <div>
-                                    {/* <ExclamationCircleIcon
-                                        className="mx-auto h-12 w-12 text-gray-400"
-                                        aria-hidden="true"
-                                    /> */}
                                     <p className="text-xs text-gray-500">
                                         PNG, JPG, GIF up to 10MB
                                     </p>
@@ -271,7 +269,6 @@ function AddService() {
                     </div>
                 </div>
 
-                {/* Submit button */}
                 <div>
                     <button
                         type="submit"
@@ -283,23 +280,59 @@ function AddService() {
                 </div>
             </form>
 
+            {/* tryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy */}
+
+
             {/* Service List */}
 
             <h1 className='flex justify-center text-3xl text-black font-bold'>Services</h1>
-            <div className="flex flex-wrap justify-center mb-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+            <div className="py-12 flex flex-wrap justify-center">
                 {showServices.map((service) => (
                     <div
                         key={service.id}
-                        className="bg-white overflow-hidden shadow-md rounded-lg"
+                        className="m-5 mx-10  p-6 max-w-[330px] w-full bg-white dark:bg-gray-800 shadow-2xl rounded-lg relative z-10"
                     >
-                        <img
+                        <div className="rounded-lg mt-[-60px] relative h-[230px]">
+                            <img
+                                className="transition-all duration-300 ease-in-out absolute w-full h-full top-5 left-0 bg-cover bg-no-repeat rounded-lg"
+                                style={{
+                                    backgroundImage: `url(${service.img})`,
+                                    zIndex: -1,
+                                }}
+                                src={service.image}
+                                alt={service.title}
+                            ></img>
+                        </div>
+                        {/* <img
                             className="w-full h-48 object-cover"
                             src={service.image}
                             alt={service.title}
-                        />
-                        <div className="p-4">
-                            <h4 className="font-bold text-lg">{service.title}</h4>
-                            <div className="mt-2 flex justify-between">
+                        /> */}
+                        <div className="pt-10">
+                            {/* <h4 className="font-bold text-lg">{service.title}</h4> */}
+                            <div className="flex flex-col items-center">
+                                <h2 className="text-lg font-body text-black font-semibold">{service.title}</h2>
+                                <div className="flex justify-between items-center flex-col">
+                                    <div className="flex justify-between items-center flex-col">
+                                        <button onClick={() => openModal(service)} className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                            تعديل الخدمة
+                                        </button>
+                                        <button onClick={() => handleDelete(service.id)} className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                            حذف الخدمة
+                                        </button>
+                                        {/* <button className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                             الخدمة
+                                        </button> */}
+                                        <button className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                            إضافة خيارات
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {/* <div className="mt-2 flex justify-between">
                                 <button
                                     className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     onClick={() => openModal(service)}
@@ -312,7 +345,7 @@ function AddService() {
                                 >
                                     delete
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 ))}
@@ -357,19 +390,18 @@ function AddService() {
                         >
                             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                    <div className="sm:flex sm:items-start">
-                                        {/* <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
-                                        </div> */}
-                                        <div className=" mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                            <Dialog.Title as="h3" className=" text-lg leading-6 font-medium text-gray-900">
-                                                Edit Service
+                                    <div className="sm:flex justify-center sm:items-end">
+
+                                        <div className=" mt-3 text-center sm:mt-0 sm:ml-4 sm:text-right">
+                                            <Dialog.Title as="h3" className=" flex justify-center text-lg leading-6 font-medium text-gray-900">
+                                                تعديل الخدمة
                                             </Dialog.Title>
                                             <div className="mt-2">
                                                 <label
                                                     htmlFor="edit-title"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Title
+                                                    اسم الخدمة
                                                 </label>
                                                 <input
                                                     type="text"
@@ -385,7 +417,7 @@ function AddService() {
                                                     htmlFor="edit-image"
                                                     className="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Image
+                                                    الصورة
                                                 </label>
                                                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                                     <div className="space-y-1 text-center">
@@ -400,10 +432,7 @@ function AddService() {
                                                             </div>
                                                         ) : (
                                                             <div>
-                                                                {/* <ExclamationCircleIcon
-                                                                    className="mx-auto h-12 w-12 text-gray-400"
-                                                                    aria-hidden="true"
-                                                                /> */}
+
                                                                 <p className="text-xs text-gray-500">
                                                                     PNG, JPG, GIF up to 10MB
                                                                 </p>
@@ -435,21 +464,21 @@ function AddService() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex ">
-                                    <button
-                                        type="submit"
-                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                        onClick={(e) => handleUpdate(e, selectedService)}
-                                    >
-                                        Save
-                                    </button>
+                                <div className="flex justify-center bg-gray-50 px-4 py-3 sm:px-6 sm:flex ">
                                     <button
                                         type="button"
                                         className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                         onClick={closeModal}
                                         ref={cancelButtonRef}
                                     >
-                                        Cancel
+                                        إلغاء
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                        onClick={(e) => handleUpdate(e, selectedService)}
+                                    >
+                                        حفظ
                                     </button>
                                 </div>
                             </div>
@@ -457,7 +486,7 @@ function AddService() {
                     </div>
                 </Dialog>
             </Transition.Root>
-        </Card>
+        </Card >
     );
 }
 

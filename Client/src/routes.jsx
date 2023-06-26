@@ -8,8 +8,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
-import AddService from "./pages/dashboard/AddService";
+// import AddService from "./pages/dashboard/AddServices";
 import ServicrsChoices from "./pages/dashboard/ServicesChoices";
+import AddService from "./pages/dashboard/AddService";
 
 
 const icon = {

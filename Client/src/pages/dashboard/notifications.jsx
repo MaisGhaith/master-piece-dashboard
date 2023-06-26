@@ -1,92 +1,69 @@
-import React from "react";
-import {
-  Typography,
-  Alert,
-  Card,
-  CardHeader,
-  CardBody,
-} from "@material-tailwind/react";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import React, { useState } from 'react';
+import useFunctions from './ChoicesFunctions';
 
 export function Notifications() {
-  const [showAlerts, setShowAlerts] = React.useState({
-    blue: true,
-    green: true,
-    orange: true,
-    red: true,
-  });
-  const [showAlertsWithIcon, setShowAlertsWithIcon] = React.useState({
-    blue: true,
-    green: true,
-    orange: true,
-    red: true,
-  });
-  const alerts = ["blue", "green", "orange", "red"];
+  const {
+    getAllChoices,
+    handleEdit,
+    handleSave,
+    handleCancel,
+    deleteChoice,
+    editingChoice,
+    editedChoice,
+    setEditedChoice,
+    addChoice,
+  } = useFunctions();
+
+  const [newChoice, setNewChoice] = useState('');
+  const [newPrice, setNewPrice] = useState('');
+
+  const handleAdd = () => {
+    if (newChoice && newPrice) {
+      addChoice(newChoice, newPrice);
+      setNewChoice('');
+      setNewPrice('');
+    }
+  };
 
   return (
-    <div className="mx-auto my-20 flex max-w-screen-lg flex-col gap-8">
-      <Card>
-        <CardHeader
-          color="transparent"
-          floated={false}
-          shadow={false}
-          className="m-0 p-4"
-        >
-          <Typography variant="h5" color="blue-gray">
-            Alerts
-          </Typography>
-        </CardHeader>
-        <CardBody className="flex flex-col gap-4 p-4">
-          {alerts.map((color) => (
-            <Alert
-              key={color}
-              show={showAlerts[color]}
-              color={color}
-              dismissible={{
-                onClose: () =>
-                  setShowAlerts((current) => ({ ...current, [color]: false })),
-              }}
-            >
-              A simple {color} alert with an <a href="#">example link</a>. Give
-              it a click if you like.
-            </Alert>
-          ))}
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader
-          color="transparent"
-          floated={false}
-          shadow={false}
-          className="m-0 p-4"
-        >
-          <Typography variant="h5" color="blue-gray">
-            Alerts with Icon
-          </Typography>
-        </CardHeader>
-        <CardBody className="flex flex-col gap-4 p-4">
-          {alerts.map((color) => (
-            <Alert
-              key={color}
-              show={showAlertsWithIcon[color]}
-              color={color}
-              icon={
-                <InformationCircleIcon strokeWidth={2} className="h-6 w-6" />
-              }
-              dismissible={{
-                onClose: () =>
-                  setShowAlertsWithIcon((current) => ({
-                    ...current,
-                    [color]: false,
-                  })),
-              }}
-            >
-              A simple {color} alert with an <a href="#">example link</a>. Give
-              it a click if you like.
-            </Alert>
-          ))}
-        </CardBody>
-      </Card>
+    <div>
+      {getAllChoices.map((choice) => (
+        <div key={choice.id}>
+          {editingChoice && editingChoice.id === choice.id ? (
+            <div>
+              <input
+                type="text"
+                value={editedChoice}
+                onChange={(e) => setEditedChoice(e.target.value)}
+              />
+              <button onClick={handleSave}>Save</button>
+              <button onClick={handleCancel}>Cancel</button>
+            </div>
+          ) : (
+            <div>
+              <p>{choice.price}</p>
+              <p>{choice.choice}</p>
+              <button onClick={() => handleEdit(choice)}>Edit</button>
+              <button onClick={() => deleteChoice(choice.id)}>Delete</button>
+            </div>
+          )}
+        </div>
+      ))}
+      <div>
+        <input
+          type="text"
+          value={newChoice}
+          onChange={(e) => setNewChoice(e.target.value)}
+          placeholder="New choice"
+        />
+        <input
+          type="text"
+          value={newPrice}
+          onChange={(e) => setNewPrice(e.target.value)}
+          placeholder="Price"
+        />
+        <button onClick={handleAdd}>Add Choice</button>
+      </div>
     </div>
   );
 }

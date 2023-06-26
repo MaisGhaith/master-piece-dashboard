@@ -7,7 +7,7 @@ const getChoices = "http://localhost:8181/getChoices/getChoice";
 
 const editChoices = "http://localhost:8181/editChoices/editChoice/:id";
 
-const addChoices = "http://localhost:8181/addChoices/addChoice"
+const addChoices = `http://localhost:8181/addChoices/addChoice${id}`
 
 
 // ! services endpoints
