@@ -1,8 +1,8 @@
 // ChoicesFunctions.js
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios, { all } from 'axios';
 
-const useFunctions = () => {
+const useFunctions = ({ service_id }) => {
     const [getAllChoices, setGetAllChoices] = useState([]);
     const [editingChoice, setEditingChoice] = useState(null);
     const [editedChoice, setEditedChoice] = useState('');
@@ -10,15 +10,24 @@ const useFunctions = () => {
     const [newChoice, setNewChoice] = useState('');
     const [newPrice, setNewPrice] = useState('');
 
+    console.log(service_id)
     const getChoices = async () => {
         try {
-            const response = await axios.get('http://localhost:8181/getChoices/getChoice');
+            const response = await axios.get(`http://localhost:8181/getChoices/getChoice/${service_id}`);
+            // console.log(response)
             const allChoices = response.data;
+            console.log(allChoices)
             setGetAllChoices(allChoices.filter((choice) => !choice.deleted));
         } catch (error) {
             console.log('Error getting choices data:', error);
         }
     };
+
+    useEffect(() => {
+        if (service_id !== null) {
+            getChoices();
+        }
+    }, [service_id]);
 
     const editChoice = async (id, choice, price) => {
         try {
@@ -94,12 +103,12 @@ const useFunctions = () => {
         setEditedPrice('');
     };
 
-    useEffect(() => {
-        getChoices();
-    }, []);
+
+    // console.log(getAllChoices)
 
     return {
         getAllChoices,
+        getChoices,
         handleEdit,
         handleSave,
         handleCancel,

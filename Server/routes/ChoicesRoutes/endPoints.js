@@ -3,11 +3,11 @@
 
 const deleteChoice = "http://localhost:8181/deleteChoices/deleteChoice/:id"
 
-const getChoices = "http://localhost:8181/getChoices/getChoice";
+const getChoices = `http://localhost:8181/getChoices/getChoice/${id}`;
 
 const editChoices = "http://localhost:8181/editChoices/editChoice/:id";
 
-const addChoices = `http://localhost:8181/addChoices/addChoice${id}`
+const addChoices = `http://localhost:8181/addChoices/addChoice${service_id}`
 
 
 // ! services endpoints

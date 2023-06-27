@@ -11,7 +11,7 @@ import { SignIn, SignUp } from "@/pages/auth";
 // import AddService from "./pages/dashboard/AddServices";
 import ServicrsChoices from "./pages/dashboard/ServicesChoices";
 import AddService from "./pages/dashboard/AddService";
-
+import ViewChoices from "./pages/dashboard/ViewChoices";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -41,6 +41,12 @@ export const routes = [
       },
       {
         icon: <TableCellsIcon {...icon} />,
+        name: "view-choices",
+        path: "/view-choices",
+        element: <ViewChoices />,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
         name: "AddService",
         path: "/AddService",
         element: <AddService />,
@@ -51,6 +57,7 @@ export const routes = [
         path: "/notifactions",
         element: <Notifications />,
       },
+
       {
         icon: <BellIcon {...icon} />,
         name: "ServicrsChoices",
