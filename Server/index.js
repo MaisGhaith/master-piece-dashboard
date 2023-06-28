@@ -22,6 +22,12 @@ app.use("/addChoices", require('./routes/ChoicesRoutes/addChoice'))
 app.use("/editChoices", require('./routes/ChoicesRoutes/editChoice'))
 app.use("/deleteChoices", require('./routes/ChoicesRoutes/deleteChoice'));
 
+
+// ! Users routes
+app.use("/getAllUsers", require('./routes/UsersRoutes/getUsers'));
+app.use("/deleteUsers", require('./routes/UsersRoutes/deleteUsers'));
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })

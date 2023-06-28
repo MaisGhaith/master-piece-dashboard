@@ -6,14 +6,8 @@ import {
     Card,
     CardHeader,
     Typography,
-    Alert,
-    CardBody,
-    button,
 } from "@material-tailwind/react";
-
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import useFunctions from "./ChoicesFunctions";
-import ViewChoices from "./viewChoices";
 
 function AddService() {
     const [service_id, setServiceId] = useState(null);
@@ -345,7 +339,7 @@ function AddService() {
             <h1 className='flex justify-center text-3xl text-black font-bold'>Services</h1>
 
             <div className="py-12 flex flex-wrap justify-center">
-                {console.log(showServices)}
+                {/* {console.log(showServices)} */}
                 {showServices.map((service) => (
                     <div
 
@@ -391,7 +385,6 @@ function AddService() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                 ))}
@@ -489,34 +482,34 @@ function AddService() {
                                 Terms of Service
                             </h3>
                             <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                                {getAllChoices.map((choices) => (
-                                    <div className="flow-root">
-                                        <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-                                            <li className="py-3 sm:py-4">
-                                                <div className="flex items-center space-x-4">
-
-                                                    <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                        {choices.price}
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                                            {choices.choice}
-                                                        </p>
-                                                        <button className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
-                                                            تعديل الخيار</button>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-
-
-                                        </ul>
+                                {getAllChoices.map((choice) => (
+                                    <div key={choice.id}>
+                                        {editingChoice && editingChoice.id === choice.id ? (
+                                            <div>
+                                                <input
+                                                    type="text"
+                                                    value={editedChoice}
+                                                    onChange={(e) => setEditedChoice(e.target.value)}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    value={editedPrice}
+                                                    onChange={(e) => setEditedPrice(e.target.value)}
+                                                />
+                                                <button onClick={handleSave}>Save</button>
+                                                <button onClick={handleCancel}>Cancel</button>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <p>{choice.price}</p>
+                                                <p>{choice.choice}</p>
+                                                <button onClick={() => handleEdit(choice)}>Edit</button>
+                                                <button onClick={() => deleteChoice(choice.id)}>Delete</button>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
-                                {console.log(getAllChoices)}
                             </div>
-
-                            {/* Add the rest of your modal content */}
                             <div className="flex justify-end">
                                 <button
                                     className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900"
@@ -528,6 +521,8 @@ function AddService() {
                         </div>
                     </div>
                 )}
+
+
             </div>
             <>
 

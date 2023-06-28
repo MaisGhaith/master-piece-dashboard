@@ -10,7 +10,7 @@ const useFunctions = ({ service_id }) => {
     const [newChoice, setNewChoice] = useState('');
     const [newPrice, setNewPrice] = useState('');
 
-    console.log(service_id)
+    // console.log(service_id)
     const getChoices = async () => {
         try {
             const response = await axios.get(`http://localhost:8181/getChoices/getChoice/${service_id}`);
