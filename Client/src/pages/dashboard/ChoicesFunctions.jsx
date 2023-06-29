@@ -4,9 +4,7 @@ import axios, { all } from 'axios';
 
 const useFunctions = ({ service_id }) => {
     const [getAllChoices, setGetAllChoices] = useState([]);
-    const [editingChoice, setEditingChoice] = useState(null);
-    const [editedChoice, setEditedChoice] = useState('');
-    const [editedPrice, setEditedPrice] = useState('');
+
     const [newChoice, setNewChoice] = useState('');
     const [newPrice, setNewPrice] = useState('');
 
@@ -80,6 +78,9 @@ const useFunctions = ({ service_id }) => {
         }
     };
 
+    const [editingChoice, setEditingChoice] = useState(null);
+    const [editedChoice, setEditedChoice] = useState('');
+    const [editedPrice, setEditedPrice] = useState('');
 
 
     const handleEdit = (choice) => {

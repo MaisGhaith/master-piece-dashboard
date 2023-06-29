@@ -20,7 +20,4 @@ router.put('/deleteUser/:user_id', async (req, res) => {
     }
 });
 
-
-
-
 module.exports = router;
