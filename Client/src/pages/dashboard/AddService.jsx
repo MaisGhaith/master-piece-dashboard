@@ -101,9 +101,6 @@ function AddService() {
         }
     }, [newService]);
 
-    // ...
-
-
     // Function to get services data from the database
     const [showServices, setShowServices] = useState([]);
     const getServices = async () => {

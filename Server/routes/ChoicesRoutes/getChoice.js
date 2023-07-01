@@ -10,7 +10,7 @@ router.get("/getChoice/:service_id", async (req, res) => {
         res.json(allChoices.rows);
         console.log(allChoices.rows)
     } catch (error) {
-        res.status(500).json(error, "Server error, can't get choices data from db")
+        res.status(500, error, "Server error, can't get choices data from db")
     }
 })
 
