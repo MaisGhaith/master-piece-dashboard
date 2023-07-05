@@ -28,6 +28,9 @@ app.use("/getAllUsers", require('./routes/UsersRoutes/getUsers'));
 app.use("/deleteUsers", require('./routes/UsersRoutes/deleteUsers'));
 
 
+// ! orders routes 
+app.use("/orders", require('./routes/OrdersRoutes/getOrders'));
+app.use("/status", require('./routes/OrdersRoutes/orderStatus'));
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
