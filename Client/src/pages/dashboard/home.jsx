@@ -27,29 +27,69 @@ import {
   projectsTableData,
   ordersOverviewData,
 } from "@/data";
+import useUsers from './UsersFunctions'
+import { Link } from "react-router-dom";
+import useOrders from '../dashboard/OrdersFunctions'
 
 export function Home() {
+
+  const { users } = useUsers();
+  const { orders } = useOrders();
+
+
+
   return (
     <div className="mt-12">
-      <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-        {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
+      <div className="flex flex-row">
+        <div className="mb-12 flex flex-col w-64 mx-5">
           <StatisticsCard
-            key={title}
-            {...rest}
-            title={title}
-            icon={React.createElement(icon, {
-              className: "w-6 h-6 text-white",
-            })}
+            icon={
+              <div className="flex items-center">
+                <i className="fa-solid fa-user text-blue-gray-600" />
+              </div>
+            }
+            title={"Users"}
             footer={
-              <Typography className="font-normal text-blue-gray-600">
-                <strong className={footer.color}>{footer.value}</strong>
-                &nbsp;{footer.label}
-              </Typography>
+              <div className="flex items-center justify-between">
+                <Typography className="ml-5 font-bold text-blue-gray-600">
+                  {users.length}
+                </Typography>
+                <Link to={"/dashboard/Users"}>
+                  <button className="px-2 py-1 ml-auto text-white bg-gray-600 rounded hover:bg-gray-500">
+                    Users page
+                  </button>
+                </Link>
+              </div>
             }
           />
-        ))}
+        </div>
+        <div className="mb-12 flex flex-col w-64 mx-5">
+          <StatisticsCard
+            icon={
+              <div className="flex items-center">
+                <i className="fa-solid fa-user text-blue-gray-600" />
+              </div>
+            }
+            title={"Orders"}
+            footer={
+              <div className="flex items-center justify-between">
+                <Typography className="ml-5 font-bold text-blue-gray-600">
+                  {orders.length}
+                </Typography>
+                <button className="px-2 py-1 ml-auto text-white bg-gray-600 rounded hover:bg-gray-500">
+                  <Link to={"/dashboard/Orders"}>
+                    Orders page
+                  </Link>
+                </button>
+              </div>
+            }
+          />
+        </div>
       </div>
-      <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
+
+
+
+      {/* <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
         {statisticsChartsData.map((props) => (
           <StatisticsChart
             key={props.title}
@@ -64,6 +104,7 @@ export function Home() {
               </Typography>
             }
           />
+
         ))}
       </div>
       <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -127,11 +168,10 @@ export function Home() {
               <tbody>
                 {projectsTableData.map(
                   ({ img, name, members, budget, completion }, key) => {
-                    const className = `py-3 px-5 ${
-                      key === projectsTableData.length - 1
-                        ? ""
-                        : "border-b border-blue-gray-50"
-                    }`;
+                    const className = `py-3 px-5 ${key === projectsTableData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                      }`;
 
                     return (
                       <tr key={name}>
@@ -155,9 +195,8 @@ export function Home() {
                                 alt={name}
                                 size="xs"
                                 variant="circular"
-                                className={`cursor-pointer border-2 border-white ${
-                                  key === 0 ? "" : "-ml-2.5"
-                                }`}
+                                className={`cursor-pointer border-2 border-white ${key === 0 ? "" : "-ml-2.5"
+                                  }`}
                               />
                             </Tooltip>
                           ))}
@@ -220,11 +259,10 @@ export function Home() {
               ({ icon, color, title, description }, key) => (
                 <div key={title} className="flex items-start gap-4 py-3">
                   <div
-                    className={`relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50 after:content-[''] ${
-                      key === ordersOverviewData.length - 1
-                        ? "after:h-0"
-                        : "after:h-4/6"
-                    }`}
+                    className={`relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50 after:content-[''] ${key === ordersOverviewData.length - 1
+                      ? "after:h-0"
+                      : "after:h-4/6"
+                      }`}
                   >
                     {React.createElement(icon, {
                       className: `!w-5 !h-5 ${color}`,
@@ -251,7 +289,7 @@ export function Home() {
             )}
           </CardBody>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 }

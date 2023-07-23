@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios, { all } from 'axios';
 
 const useFunctions = ({ service_id }) => {
+
     const [getAllChoices, setGetAllChoices] = useState([]);
 
     const [newChoice, setNewChoice] = useState('');
@@ -103,9 +104,6 @@ const useFunctions = ({ service_id }) => {
         setEditedChoice('');
         setEditedPrice('');
     };
-
-
-    // console.log(getAllChoices)
 
     return {
         getAllChoices,
