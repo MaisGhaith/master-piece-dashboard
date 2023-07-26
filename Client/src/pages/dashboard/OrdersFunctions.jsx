@@ -57,6 +57,22 @@ const OrdersFunctions = () => {
     }, [])
 
 
+    // ! get deleted orders 
+    const [deletedOrder, setDeletedOrder] = useState([]);
+    const getDeletedOrder = async () => {
+        try {
+            const response = await axios.get("http://localhost:8181/orders/getDeletedOrder");
+            const allOrders = response.data;
+            setDeletedOrder(allOrders);
+        } catch (error) {
+            console.log("Error getting deleted orders data : ", error)
+        }
+    }
+
+    useEffect(() => {
+        getDeletedOrder();
+    }, [])
+
     // ! edit the approved column status 
     const handleChangeApproved = async (orderNo) => {
         const confirmed = window.confirm('Are you sure you want to Approve this order ? ');
@@ -67,6 +83,7 @@ const OrdersFunctions = () => {
                 await getOrders();
                 await getDoneOrders();
                 await getPendingOrders();
+                await getDeletedOrder();
             } catch (error) {
                 console.error('Error approved order:', error);
 
@@ -86,6 +103,7 @@ const OrdersFunctions = () => {
                 await getOrders();
                 await getDoneOrders();
                 await getPendingOrders();
+                await getDeletedOrder();
             } catch (error) {
                 console.error('Error updating order status:', error);
             }
@@ -99,7 +117,8 @@ const OrdersFunctions = () => {
         getDoneOrders,
         pendingOrders,
         handleChangeApproved,
-        handleChangeStatus
+        handleChangeStatus,
+        deletedOrder
 
 
     }

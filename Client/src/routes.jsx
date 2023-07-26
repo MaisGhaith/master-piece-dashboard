@@ -12,6 +12,7 @@ import { SignIn, SignUp } from "@/pages/auth";
 import ServicrsChoices from "./pages/dashboard/ServicesChoices";
 import AddService from "./pages/dashboard/AddService";
 import Orders from "./pages/dashboard/Orders";
+import BillingOrders from "./pages/dashboard/BillingOrders";
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
@@ -31,6 +32,12 @@ export const routes = [
         name: "profile",
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
+        name: "BillingOrders",
+        path: "/BillingOrders",
+        element: <BillingOrders />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
