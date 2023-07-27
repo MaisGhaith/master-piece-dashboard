@@ -1,7 +1,8 @@
+// BillingOrdersFunctions.js
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
-const BillingOrdersFunctions = () => {
+const useBilling = () => {
 
     const [billingOrder, setBillingOrder] = useState([]);
     const getBillingOrders = async () => {
@@ -10,17 +11,22 @@ const BillingOrdersFunctions = () => {
             const allBillingOrders = response.data;
             setBillingOrder(allBillingOrders);
         } catch (error) {
-            console.log("Error getting billing orders from db : ", error)
+            console.log("Error getting billing orders from db: ", error);
         }
-    }
+    };
 
     useEffect(() => {
         getBillingOrders();
-    }, [])
+    }, []);
+
+
+
+
 
     return {
-        billingOrder
-    }
-}
+        billingOrder,
+        getBillingOrders,
+    };
+};
 
-export default BillingOrdersFunctions
+export default useBilling;
