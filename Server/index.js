@@ -33,6 +33,12 @@ app.use("/orders", require('./routes/OrdersRoutes/getOrders'));
 app.use("/status", require('./routes/OrdersRoutes/orderStatus'));
 app.use("/editPrice", require('./routes/OrdersRoutes/editPrice'));
 
+
+// ! faqs routes
+app.use("/faqs", require('./routes/Faqs/Faqs'));
+// app.use("/faqs", require('./routes/Faqs/answer'));
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })

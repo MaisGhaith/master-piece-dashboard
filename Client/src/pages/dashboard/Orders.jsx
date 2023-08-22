@@ -23,9 +23,6 @@ function Orders() {
     }
         = useOrders();
 
-
-
-
     return (
         <div className="mt-12 mb-8 flex flex-col gap-12">
             <Card>
@@ -136,7 +133,7 @@ function Orders() {
                 </CardBody>
             </Card>
             <Card>
-                <CardHeader variant="gradient" color="blue" className="flex justify-between mb-8 p-6">
+                <CardHeader variant="gradient" color="blue" className="flex justify-between mb-8 p-6 overflow-y-auto ">
                     <Typography variant="h6" color="white">
                         In progress orders
                     </Typography>
@@ -144,7 +141,7 @@ function Orders() {
                         {orders.length}
                     </Typography>
                 </CardHeader>
-                <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+                <CardBody className="overflow-scroll px-0 pt-0 pb-2" style={{ maxHeight: '320px', maxWidth: '1500px' }}>
                     <table className="w-full min-w-[640px] table-auto">
                         <thead>
                             <tr>
@@ -154,6 +151,7 @@ function Orders() {
                                     'Service/Choice',
                                     'Phone',
                                     'status',
+                                    'Price',
                                     'location',
                                     'Image',
                                 ].map((el) => (
@@ -171,7 +169,7 @@ function Orders() {
                         <tbody>
                             {orders.map(
                                 (
-                                    { name, phone, order_no, user_id, service_name, choice_name, location, image, status },
+                                    { name, phone, order_no, user_id, service_name, choice_name, location, image, status, price },
                                     key
                                 ) => {
                                     const className = `py-3 px-5 ${key === authorsTableData.length - 1 ? '' : 'border-b border-blue-gray-50'
@@ -218,9 +216,21 @@ function Orders() {
                                                     variant="gradient"
                                                     color={status ? 'green' : 'blue-gray'}
                                                     value={status ? 'Done' : 'In progress'}
-                                                    className="py-0.5 px-2 text-[11px] font-medium"
-                                                    onClick={() => handleChangeStatus(order_no)}
+
+                                                    className={`py-0.5 px-2 text-[11px] font-medium ${price === '0' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                                    title={price === '0' ? 'Button disabled because price is 0' : 'Click to change status'}
+                                                    onClick={() => {
+                                                        if (price !== '0') {
+                                                            handleChangeStatus(order_no)
+                                                        }
+                                                    }
+                                                    }
                                                 />
+                                            </td>
+                                            <td className={className}>
+                                                <Typography className="text-xs font-semibold text-blue-gray-600">
+                                                    {price}
+                                                </Typography>
                                             </td>
                                             <td className={className}>
                                                 <a
@@ -352,7 +362,6 @@ function Orders() {
             <Card>
                 <CardHeader variant="gradient" color="blue" className="flex justify-between mb-8 p-6">
                     <Typography variant="h6" color="white">
-                        {console.log(deletedOrder)}
                         Deleted orders
                     </Typography>
                     <Typography variant="h6" color="white">

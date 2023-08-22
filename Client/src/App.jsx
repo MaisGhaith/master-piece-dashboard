@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
-
+import '../src/style.css';
 function App() {
   return (
     <Routes>
@@ -10,5 +10,6 @@ function App() {
     </Routes>
   );
 }
+
 
 export default App;

@@ -2,15 +2,30 @@ import React, { Fragment, useRef, useEffect, useState } from "react";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
 import Swal from 'sweetalert2';
+
 import {
     Card,
     CardHeader,
     Typography,
+    CardBody,
+    Input,
+    Checkbox,
+    CardFooter,
+    Button,
+
 } from "@material-tailwind/react";
 import useFunctions from "./ChoicesFunctions";
+import Details from "./Details";
+import { Link, useNavigate } from "react-router-dom";
 
 function AddService() {
     const [service_id, setServiceId] = useState(null);
+
+    const navigate = useNavigate();
+
+    // const handleDetailsClick = () => {
+    //     navigate('/Details'); // Redirect to the "Details" route
+    // };
 
     const {
         getAllChoices,
@@ -241,6 +256,13 @@ function AddService() {
         console.log(id)
     }
 
+    const [choice_id, setChoiceId] = useState(null);
+    const getChoiceId = (choiceId) => {
+        setChoiceId(choiceId);
+        console.log(choiceId)
+    };
+
+
     return (
 
         <Card className="mt-12 mb-8 flex flex-col gap-12">
@@ -377,6 +399,7 @@ function AddService() {
                                             className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
                                             عرض الخيارات
                                         </button>
+
                                         {service.id}
                                     </div>
                                 </div>
@@ -436,7 +459,7 @@ function AddService() {
                                             type="text"
                                             name="choice"
                                             id="choice"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                            className="input input-outline input-success"
                                             placeholder="الخيار"
                                             required=""
                                             value={newChoice}
@@ -454,7 +477,7 @@ function AddService() {
                                             type="text"
                                             name="price"
                                             id="price"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                            className="input input-outline input-success"
                                             placeholder="السعر"
                                             required=""
                                             value={newPrice}
@@ -473,11 +496,12 @@ function AddService() {
                 )}
                 {getModal && (
                     <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-75">
-                        <div className="bg-white rounded-lg shadow-lg p-6">
-                            {/* Modal content goes here */}
-                            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                                Terms of Service
-                            </h3>
+                        <div className="bg-white rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-scroll">
+                            <div className="flex justify-center">
+                                <h3 className=" text-xl font-semibold text-gray-900 mb-4">
+                                    الخيارات
+                                </h3>
+                            </div>
                             <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                                 {getAllChoices.map((choice) => (
                                     <div key={choice.id}>
@@ -494,43 +518,42 @@ function AddService() {
                                                     onChange={(e) => setEditedPrice(e.target.value)}
                                                 />
                                                 <button onClick={handleSave}>Save</button>
-                                                <button onClick={handleCancel}>Cancel</button>
+                                                <button className="btn btn-error" onClick={handleCancel}>Cancel</button>
                                             </div>
                                         ) : (
-                                            <div>
-                                                <p>{choice.price}</p>
-                                                <p>{choice.choice}</p>
-                                                <button onClick={() => handleEdit(choice)}>Edit</button>
-                                                <button onClick={() => deleteChoice(choice.id)}>Delete</button>
+                                            <div className="py-7" >
+                                                <div className="flex justify-center mt-2  my-4 ">
+                                                    <p>{choice.price}</p>
+                                                    <p>{choice.choice}</p>
+
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <button onClick={() => deleteChoice(choice.id)} className="btn btn-outline btn-error w-20" >حذف</button>
+                                                    <button onClick={() => handleEdit(choice)} className="btn btn-outline btn-warning w-20 mx-5">تعديل</button>
+                                                    <Link to={`/dashboard/Details?choiceId=${choice.id}`}>
+                                                        <button className="btn btn-outline btn-success w-20">إضافة تفاصيل</button>
+                                                    </Link>
+
+                                                </div>
+
                                             </div>
                                         )}
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex justify-end">
+                            <div className="flex justify-center">
                                 <button
-                                    className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900"
+                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900"
                                     onClick={closeGetDataModal}
                                 >
-                                    Close
+                                    إغلاق
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
 
-
             </div>
-            <>
-
-                {/* Main modal */}
-
-            </>
-
-            {/* Add choices  */}
-
-
-            {/* Edit Service Modal */}
             <Transition.Root show={open} as={Fragment}>
                 <Dialog
                     as="div"

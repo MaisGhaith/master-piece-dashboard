@@ -14,4 +14,20 @@ router.get("/getChoice/:service_id", async (req, res) => {
     }
 })
 
+
+router.get("/getDetails/:choice_id", async (req, res) => {
+    const { choice_id } = req.params;
+    const sql = `SELECT * FROM details WHERE deleted = false AND choice_id = $1`
+
+    try {
+        const allDetails = await pool.query(sql, [choice_id]);
+        res.json(allDetails.rows);
+        console.log(allDetails.rows)
+
+    } catch (error) {
+        res.status(500, error, "Server error, can't get details data from db")
+
+    }
+})
+
 module.exports = router;

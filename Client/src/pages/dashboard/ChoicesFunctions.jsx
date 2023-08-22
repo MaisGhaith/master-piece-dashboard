@@ -105,6 +105,12 @@ const useFunctions = ({ service_id }) => {
         setEditedPrice('');
     };
 
+
+
+
+
+
+
     return {
         getAllChoices,
         getChoices,
