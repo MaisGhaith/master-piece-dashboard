@@ -71,11 +71,11 @@ const Faqs = () => {
     // ! show full text function
     const [showFullText, setShowFullText] = useState(false);
 
-    // function shortenText(text, wordsCount) {
-    //     const words = text.split(' ');
-    //     const shortenedText = words.slice(0, wordsCount).join(' ');
-    //     return shortenedText;
-    // }
+    function shortenText(text, wordsCount) {
+        const words = text.split(' ');
+        const shortenedText = words.slice(0, wordsCount).join(' ');
+        return shortenedText;
+    }
 
 
     const [expandedAnswers, setExpandedAnswers] = useState({});
@@ -163,7 +163,7 @@ const Faqs = () => {
                                                     رد
                                                 </button>
                                             </td>
-                                            <td className="w-96" >
+                                            <td className="w-96">
                                                 {expandedAnswers[id] ? (
                                                     <div>
                                                         {answer}
@@ -177,16 +177,19 @@ const Faqs = () => {
                                                 ) : (
                                                     <div>
                                                         {answer}
-                                                        {/* {answer.split(' ').length > 3 && (
+                                                        {!expandedAnswers[id] && answer && answer.split(' ').length > 3 && (
                                                             <button
-                                                                className="text-green-500"
-                                                                onClick={() => toggleAnswerExpansion(id)}>
-                                                                اقرأ المزيد
+                                                                className={showFullText ? "text-yellow-500" : "text-green-500"}
+                                                                onClick={() => toggleAnswerExpansion(id)}
+                                                            >
+                                                                {showFullText ? "إخفاء" : "اقرأ المزيد"}
                                                             </button>
-                                                        )} */}
+                                                        )}
                                                     </div>
                                                 )}
                                             </td>
+
+
 
                                             <td className={className}>
                                                 <Chip

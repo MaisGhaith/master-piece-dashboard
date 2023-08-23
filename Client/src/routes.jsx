@@ -13,7 +13,7 @@ import Orders from "./pages/dashboard/Orders";
 import BillingOrders from "./pages/dashboard/BillingOrders";
 import Faqs from "./pages/dashboard/Faqs";
 import Details from "./pages/dashboard/Details";
-import '../src/style.css'
+// import '../src/style.css'
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
