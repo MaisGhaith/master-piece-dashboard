@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -9,8 +8,46 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import axios from "axios";
 
 export function SignIn() {
+  const navigate = useNavigate(); // Get the navigate function
+
+  const [formData, setFormData] = useState({
+    user_email: "",
+    user_password: "",
+  });
+
+  const [error, setError] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8181/login/login",
+        formData
+      );
+      console.log("Login successful:", response.data);
+
+      // Redirect the user to the desired page using navigate
+      navigate("/dashboard/home");
+    } catch (error) {
+      console.log(error);
+      setError("Invalid email or password");
+    }
+  };
+
   return (
     <>
       <img
@@ -26,34 +63,25 @@ export function SignIn() {
             className="mb-4 grid h-28 place-items-center"
           >
             <Typography variant="h3" color="white">
-              Sign In
+              تسجيل الدخول
             </Typography>
           </CardHeader>
-          <CardBody className="flex flex-col gap-4">
-            <Input type="email" label="Email" size="lg" />
-            <Input type="password" label="Password" size="lg" />
-            <div className="-ml-2.5">
-              <Checkbox label="Remember Me" />
-            </div>
-          </CardBody>
-          <CardFooter className="pt-0">
-            <Button variant="gradient" fullWidth>
-              Sign In
-            </Button>
-            <Typography variant="small" className="mt-6 flex justify-center">
-              Don't have an account?
-              <Link to="/auth/sign-up">
-                <Typography
-                  as="span"
-                  variant="small"
-                  color="blue"
-                  className="ml-1 font-bold"
-                >
-                  Sign up
-                </Typography>
-              </Link>
-            </Typography>
-          </CardFooter>
+          <form onSubmit={handleSubmit}>
+            <CardBody className="flex flex-col gap-4">
+              <Input type="email" label="الايميل" size="lg" name="user_email"
+                value={formData.user_email}
+                onChange={handleInputChange} />
+              <Input type="password" label="كلمة السر" size="lg" name="user_password"
+                value={formData.user_password}
+                onChange={handleInputChange} />
+
+            </CardBody>
+            <CardFooter className="pt-0">
+              <Button type="submit" variant="gradient" fullWidth>
+                دخول
+              </Button>
+            </CardFooter>
+          </form>
         </Card>
       </div>
     </>

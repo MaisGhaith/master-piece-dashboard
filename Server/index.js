@@ -36,7 +36,10 @@ app.use("/editPrice", require('./routes/OrdersRoutes/editPrice'));
 
 // ! faqs routes
 app.use("/faqs", require('./routes/Faqs/Faqs'));
-// app.use("/faqs", require('./routes/Faqs/answer'));
+
+// ! register
+app.use('/admin', require('./routes/Registration/registration'));
+app.use('/login', require('./routes/Registration/login'));
 
 
 app.listen(PORT, () => {

@@ -1,218 +1,265 @@
 import {
   Card,
-  CardBody,
   CardHeader,
+  CardBody,
   CardFooter,
-  Avatar,
-  Typography,
-  Tabs,
-  TabsHeader,
-  Tab,
-  Switch,
-  Tooltip,
+  Input,
+  Checkbox,
   Button,
+  Typography,
+  Avatar,
+  Chip
 } from "@material-tailwind/react";
-import {
-  HomeIcon,
-  ChatBubbleLeftEllipsisIcon,
-  Cog6ToothIcon,
-  PencilIcon,
-} from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
-import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
-import { platformSettingsData, conversationsData, projectsData } from "@/data";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { authorsTableData, projectsTableData } from "@/data";
 
 export function Profile() {
+
+  const [formData, setFormData] = useState({
+    user_name: '',
+    user_email: '',
+    user_password: '',
+    phone_number: '',
+    role: 'admin',
+    deleted: false
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:8181/admin/addAdmin', formData);
+      console.log('User registered:', response.data);
+    } catch (error) {
+      console.error('Registration error:', error.response.data);
+    }
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const [admins, setAdmins] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchAdmins() {
+      try {
+        const response = await axios.get('http://localhost:8181/admin/getAdmins');
+        setAdmins(response.data);
+        console.log(response.data)
+      } catch (error) {
+        setError("Error fetching admins");
+      }
+    }
+    fetchAdmins();
+  }, []);
+
+
+  const [showModal, setShowModal] = useState(false);
+  const [adminId, setAdminId] = useState('');
+
+  const handleUserDelete = async () => {
+    try {
+      // Toggle the deleted status locally
+      const updatedAdmins = admins.map(admin => {
+        if (admin.user_id === adminId) {
+          return { ...admin, deleted: !admin.deleted };
+        }
+        return admin;
+      });
+      setAdmins(updatedAdmins);
+
+      // Update the deleted status on the server
+      const response = await axios.put(`http://localhost:8181/admin/deleteAdmin/${adminId}`);
+      if (response.data === 'admin status updated') {
+        setShowModal(false);
+      }
+    } catch (error) {
+      console.error(`Error updating admin status with ID ${adminId}`, error);
+      // Handle error case
+    }
+  };
+
+
+
+  console.log(adminId)
+  const openModal = (adminId) => {
+    setAdminId(adminId);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+
+
+
+
   return (
     <>
-      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)] bg-cover	bg-center">
-        <div className="absolute inset-0 h-full w-full bg-blue-500/50" />
-      </div>
-      <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
-        <CardBody className="p-4">
-          <div className="mb-10 flex items-center justify-between gap-6">
-            <div className="flex items-center gap-6">
-              <Avatar
-                src="/img/bruce-mars.jpeg"
-                alt="bruce-mars"
-                size="xl"
-                className="rounded-lg shadow-lg shadow-blue-gray-500/40"
-              />
-              <div>
-                <Typography variant="h5" color="blue-gray" className="mb-1">
-                  Richard Davis
-                </Typography>
-                <Typography
-                  variant="small"
-                  className="font-normal text-blue-gray-600"
-                >
-                  CEO / Co-Founder
-                </Typography>
-              </div>
-            </div>
-            <div className="w-96">
-              <Tabs value="app">
-                <TabsHeader>
-                  <Tab value="app">
-                    <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    App
-                  </Tab>
-                  <Tab value="message">
-                    <ChatBubbleLeftEllipsisIcon className="-mt-0.5 mr-2 inline-block h-5 w-5" />
-                    Message
-                  </Tab>
-                  <Tab value="settings">
-                    <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    Settings
-                  </Tab>
-                </TabsHeader>
-              </Tabs>
-            </div>
-          </div>
-          <div className="gird-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-3">
-            <div>
-              <Typography variant="h6" color="blue-gray" className="mb-3">
-                Platform Settings
-              </Typography>
-              <div className="flex flex-col gap-12">
-                {platformSettingsData.map(({ title, options }) => (
-                  <div key={title}>
-                    <Typography className="mb-4 block text-xs font-semibold uppercase text-blue-gray-500">
-                      {title}
-                    </Typography>
-                    <div className="flex flex-col gap-6">
-                      {options.map(({ checked, label }) => (
-                        <Switch
-                          key={label}
-                          id={label}
-                          label={label}
-                          defaultChecked={checked}
-                          labelProps={{
-                            className: "text-sm font-normal text-blue-gray-500",
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <ProfileInfoCard
-              title="Profile Information"
-              description="Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
-              details={{
-                "first name": "Alec M. Thompson",
-                mobile: "(44) 123 1234 123",
-                email: "alecthompson@mail.com",
-                location: "USA",
-                social: (
-                  <div className="flex items-center gap-4">
-                    <i className="fa-brands fa-facebook text-blue-700" />
-                    <i className="fa-brands fa-twitter text-blue-400" />
-                    <i className="fa-brands fa-instagram text-purple-500" />
-                  </div>
-                ),
-              }}
-              action={
-                <Tooltip content="Edit Profile">
-                  <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />
-                </Tooltip>
-              }
-            />
-            <div>
-              <Typography variant="h6" color="blue-gray" className="mb-3">
-                Platform Settings
-              </Typography>
-              <ul className="flex flex-col gap-6">
-                {conversationsData.map((props) => (
-                  <MessageCard
-                    key={props.name}
-                    {...props}
-                    action={
-                      <Button variant="text" size="sm">
-                        reply
-                      </Button>
-                    }
-                  />
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="px-4 pb-4">
-            <Typography variant="h6" color="blue-gray" className="mb-2">
-              Projects
+      {/* <img
+        src="https://images.pexels.com/photos/4480531/pexels-photo-4480531.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        className="absolute inset-0 z-0 h-full w-full object-cover"
+      /> */}
+      <div className="mt-12 mb-8 flex flex-col gap-12">
+        <Card className="flex justify-center  left-2/4 w-full max-w-[24rem]  -translate-x-2/4">
+          <CardHeader
+            variant="gradient"
+            color="blue"
+            className="mb-4 grid h-28 place-items-center"
+          >
+            <Typography variant="h3" color="white">
+              تسجيل مسؤول جديد
             </Typography>
-            <Typography
-              variant="small"
-              className="font-normal text-blue-gray-500"
-            >
-              Architects design houses
+          </CardHeader>
+          <form onSubmit={handleSubmit} >
+            <CardBody className="flex flex-col gap-4">
+              <Input label="Name" size="lg" name="user_name" value={formData.user_name} onChange={handleInputChange} />
+              <Input type="email" label="Email" name="user_email" size="lg" value={formData.user_email} onChange={handleInputChange} />
+              <Input type="tel" label="Phone number" name="phone_number" size="lg" value={formData.phone_number} onChange={handleInputChange} />
+              <Input type="password" label="Password" size="lg" name="user_password" value={formData.user_password} onChange={handleInputChange} />
+
+            </CardBody>
+            <CardFooter className="pt-0">
+              <Button type="submit" variant="gradient" fullWidth>
+                تسجيل المسؤول
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+        <Card>
+          <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
+            <Typography className="flex justify-end" variant="h6" color="white">
+              المسؤولين
             </Typography>
-            <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
-              {projectsData.map(
-                ({ img, title, description, tag, route, members }) => (
-                  <Card key={title} color="transparent" shadow={false}>
-                    <CardHeader
-                      floated={false}
-                      color="gray"
-                      className="mx-0 mt-0 mb-4 h-64 xl:h-40"
+          </CardHeader>
+          <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+            <table className="w-full min-w-[640px] table-auto fr ">
+              <thead>
+                <tr>
+                  {["الحالة", "رقم الهاتف", "الايميل", "المسؤول"].map((el) => (
+                    <th
+                      key={el}
+                      className="border-b border-blue-gray-50 py-3 px-5 text-left"
                     >
-                      <img
-                        src={img}
-                        alt={title}
-                        className="h-full w-full object-cover"
-                      />
-                    </CardHeader>
-                    <CardBody className="py-0 px-1">
                       <Typography
                         variant="small"
-                        className="font-normal text-blue-gray-500"
+                        className="text-[11px] font-bold uppercase text-blue-gray-400"
                       >
-                        {tag}
+                        {el}
                       </Typography>
-                      <Typography
-                        variant="h5"
-                        color="blue-gray"
-                        className="mt-1 mb-2"
-                      >
-                        {title}
-                      </Typography>
-                      <Typography
-                        variant="small"
-                        className="font-normal text-blue-gray-500"
-                      >
-                        {description}
-                      </Typography>
-                    </CardBody>
-                    <CardFooter className="mt-6 flex items-center justify-between py-0 px-1">
-                      <Link to={route}>
-                        <Button variant="outlined" size="sm">
-                          view project
-                        </Button>
-                      </Link>
-                      <div>
-                        {members.map(({ img, name }, key) => (
-                          <Tooltip key={name} content={name}>
-                            <Avatar
-                              src={img}
-                              alt={name}
-                              size="xs"
-                              variant="circular"
-                              className={`cursor-pointer border-2 border-white ${
-                                key === 0 ? "" : "-ml-2.5"
-                              }`}
-                            />
-                          </Tooltip>
-                        ))}
-                      </div>
-                    </CardFooter>
-                  </Card>
-                )
-              )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {admins.map(
+                  ({ user_id, user_name, user_email, phone_number, deleted }, key) => {
+                    const className = `py-3 px-5 ${key === authorsTableData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                      }`;
+
+                    return (
+                      <tr key={user_id}>
+
+                        <td className={className}>
+                          <Chip
+                            variant="gradient"
+                            color={deleted ? "green" : "blue-gray"}
+                            value={deleted ? "Active" : "Deleted"}
+                            className="py-0.5 px-2 text-[11px] font-medium"
+                            onClick={() => {
+                              console.log("Clicked user_id:", user_id);
+                              openModal(user_id);
+                            }}
+                          />
+
+                        </td>
+
+
+                        <td className={className}>
+                          <div>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-semibold"
+                            >
+                              {phone_number}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center gap-4">
+
+                            <div>
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-semibold"
+                              >
+                                {user_email}
+                              </Typography>
+                            </div>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center gap-4">
+
+                            <div>
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-semibold"
+                              >
+                                {user_name}
+                              </Typography>
+                            </div>
+                          </div>
+                        </td>
+
+
+
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+
+            </table>
+          </CardBody>
+        </Card>
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300">
+            <div className="modal-container">
+              <div className="modal-content bg-white rounded-lg p-10">
+                <p>هل أنت متأكد انك تريد تغيير حالة هذا المسؤول؟ </p>
+                <div className="flex justify-center mt-4">
+                  <button
+                    className="px-4 py-2 mx-2 bg-gray-300 text-gray-700 rounded-lg"
+                    onClick={closeModal}
+                  >
+                    إلغاء
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg mr-2"
+                    onClick={() => handleUserDelete()}
+                  >
+                    حذف
+                  </button>
+
+                </div>
+              </div>
             </div>
           </div>
-        </CardBody>
-      </Card>
+        )}
+      </div>
     </>
   );
 }
