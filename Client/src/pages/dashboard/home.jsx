@@ -34,59 +34,138 @@ import useOrders from '../dashboard/OrdersFunctions'
 export function Home() {
 
   const { users } = useUsers();
-  const { orders } = useOrders();
+  const { allOrders, doneOrders, totalMoney } = useOrders();
 
 
 
   return (
     <div className="mt-12">
-      <div className="flex flex-row">
-        <div className="mb-12 flex flex-col w-64 mx-5">
-          <StatisticsCard
-            icon={
-              <div className="flex items-center">
-                <i className="fa-solid fa-user text-blue-gray-600" />
-              </div>
-            }
-            title={"Users"}
-            footer={
-              <div className="flex items-center justify-between">
-                <Typography className="ml-5 font-bold text-blue-gray-600">
-                  {users.length}
-                </Typography>
-                <Link to={"/dashboard/Users"}>
-                  <button className="px-2 py-1 ml-auto text-white bg-gray-600 rounded hover:bg-gray-500">
-                    Users page
-                  </button>
-                </Link>
-              </div>
-            }
-          />
-        </div>
-        <div className="mb-12 flex flex-col w-64 mx-5">
-          <StatisticsCard
-            icon={
-              <div className="flex items-center">
-                <i className="fa-solid fa-user text-blue-gray-600" />
-              </div>
-            }
-            title={"Orders"}
-            footer={
-              <div className="flex items-center justify-between">
-                <Typography className="ml-5 font-bold text-blue-gray-600">
-                  {orders.length}
-                </Typography>
-                <button className="px-2 py-1 ml-auto text-white bg-gray-600 rounded hover:bg-gray-500">
-                  <Link to={"/dashboard/Orders"}>
-                    Orders page
-                  </Link>
-                </button>
-              </div>
-            }
-          />
-        </div>
-      </div>
 
+      <>
+        <link
+          rel="stylesheet"
+          href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
+        />
+        <div className="flex flex-wrap  ">
+          <div className="mt-4 w-full lg:w-6/12 xl:w-3/12 px-5 mb-4">
+            <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-3 xl:mb-0 shadow-lg">
+              <div className="flex-auto p-4">
+                <div className="flex flex-wrap">
+                  <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                    <h5 className="text-blueGray-400 uppercase font-bold text-xs">
+                      {" "}
+                      Total money
+                    </h5>
+                    <span className="font-semibold text-xl text-blueGray-700">
+                      {totalMoney} JD
+                    </span>
+                  </div>
+                  <div className="relative w-auto pl-4 flex-initial">
+                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-red-500">
+                      <i className="fas fa-chart-bar" />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-blueGray-400 mt-4">
+                  <span className="text-emerald-500 mr-2">
+                    <i className="fas fa-arrow-up" /> 2,99%{" "}
+                  </span>
+                  <span className="whitespace-nowrap"> Since last month </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className=" mt-4 w-full lg:w-6/12 xl:w-3/12 px-5">
+            <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-4 xl:mb-0 shadow-lg">
+              <div className="flex-auto p-4">
+                <div className="flex flex-wrap">
+                  <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                    <h5 className="text-blueGray-400 uppercase font-bold text-xs">
+                      New users
+                    </h5>
+                    <span className="font-semibold text-xl text-blueGray-700">
+                      {users.length}
+                    </span>
+                  </div>
+                  <div className="relative w-auto pl-4 flex-initial">
+                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-pink-500">
+                      <i className="fas fa-users" />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-blueGray-400 mt-4">
+                  <span className="text-red-500 mr-2">
+                  </span>
+                  <Link to={"/dashboard/Users"}>
+                    <button className="whitespace-nowrap text-yellow-300 hover:text-yellow-200 "> Users Page </button>
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 w-full lg:w-6/12 xl:w-3/12 px-5">
+            <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+              <div className="flex-auto p-4">
+                <div className="flex flex-wrap">
+                  <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                    <h5 className="text-blueGray-400 uppercase font-bold text-xs">
+                      Orders
+                    </h5>
+                    <span className="font-semibold text-xl text-blueGray-700">
+                      {allOrders.length}
+                    </span>
+                  </div>
+                  <div className="relative w-auto pl-4 flex-initial">
+                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-lightBlue-500">
+                      <i className="fas fa-chart-pie" />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-blueGray-400 mt-4">
+                  <span className="text-red-500 mr-2">
+                  </span>
+                  <Link to={"/dashboard/Orders"}>
+                    <span className="text-yellow-300 hover:text-yellow-200 whitespace-nowrap"> Orders Page </span>
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 w-full lg:w-6/12 xl:w-3/12 px-5">
+            <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+              <div className="flex-auto p-4">
+                <div className="flex flex-wrap">
+                  <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                    <h5 className="text-blueGray-400 uppercase font-bold text-xs">
+                      Done orders
+                    </h5>
+                    <span className="font-semibold text-xl text-blueGray-700">
+                      {doneOrders.length}
+                    </span>
+                  </div>
+                  <div className="relative w-auto pl-4 flex-initial">
+                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-emerald-500">
+                      <i className="fas fa-percent" />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-blueGray-400 mt-4">
+                  <span className="text-emerald-500 mr-2">
+                  </span>
+                  <Link to={"/dashboard/Orders"}>
+                    <span className="text-yellow-300 hover:text-yellow-200 whitespace-nowrap"> Orders Page </span>
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </>
 
 
       {/* <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">

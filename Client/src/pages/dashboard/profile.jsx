@@ -177,16 +177,16 @@ export function Profile() {
                         <td className={className}>
                           <Chip
                             variant="gradient"
-                            color={deleted ? "green" : "blue-gray"}
-                            value={deleted ? "Active" : "Deleted"}
+                            color={deleted ? "blue-gray" : "green"}
+                            value={deleted ? "Deleted" : "Active"}
                             className="py-0.5 px-2 text-[11px] font-medium"
                             onClick={() => {
                               console.log("Clicked user_id:", user_id);
                               openModal(user_id);
                             }}
                           />
-
                         </td>
+
 
 
                         <td className={className}>

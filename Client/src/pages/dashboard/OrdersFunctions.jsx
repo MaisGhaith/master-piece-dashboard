@@ -5,6 +5,24 @@ const OrdersFunctions = () => {
 
     const [showModal, setShowModal] = useState(false);
 
+
+    // ! get all orders 
+    const [allOrders, setGetAllOrders] = useState([]);
+    const getAllOrders = async () => {
+        try {
+            const response = await axios.get("http://localhost:8181/orders/allOrder");
+            const orders = response.data;
+            setGetAllOrders(orders);
+        } catch (error) {
+            console.log("Error getting orders data:", error);
+
+        }
+    }
+
+    useEffect(() => {
+        getAllOrders()
+    }, [])
+
     // ! get orders function
 
     const [orders, setOrders] = useState([]);
@@ -110,6 +128,22 @@ const OrdersFunctions = () => {
         }
     };
 
+    // ! get total money 
+    const [totalMoney, setTotalMoney] = useState(null);
+    console.log(totalMoney)
+    const fetchTotalOrderPrice = async () => {
+        try {
+            const response = await axios.get("http://localhost:8181/orders/orderPrice"); // Replace with your backend endpoint
+            setTotalMoney(response.data.totalMoney);
+        } catch (error) {
+            console.error("Error fetching total order price:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTotalOrderPrice();
+    }, []);
+
     return {
         orders,
         doneOrders,
@@ -118,7 +152,9 @@ const OrdersFunctions = () => {
         pendingOrders,
         handleChangeApproved,
         handleChangeStatus,
-        deletedOrder
+        deletedOrder,
+        allOrders,
+        totalMoney
 
 
     }

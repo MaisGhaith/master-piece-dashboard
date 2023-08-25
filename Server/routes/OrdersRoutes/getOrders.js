@@ -59,4 +59,32 @@ router.get("/getBillingOrders", async (req, res) => {
     }
 })
 
+// ! get all orders
+router.get("/allOrder", async (req, res) => {
+    try {
+        const allOrders = await pool.query("SELECT * FROM orders")
+        res.json(allOrders.rows)
+
+    } catch (error) {
+        res.status(500, error, "Server error, can't get orders data from db")
+
+    }
+})
+
+
+// ! get order price 
+router.get("/orderPrice", async (req, res) => {
+    try {
+        const totalMoneyQuery = "SELECT SUM(price::numeric) AS total_price FROM orders";
+        const result = await pool.query(totalMoneyQuery);
+        const totalMoney = result.rows[0].total_price;
+
+        res.json({ totalMoney });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 module.exports = router;
