@@ -39,6 +39,8 @@ export function SignIn() {
         formData
       );
       console.log("Login successful:", response.data);
+      console.log(response.data.token)
+      localStorage.setItem("token", response.data.token)
 
       // Redirect the user to the desired page using navigate
       navigate("/dashboard/home");

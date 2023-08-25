@@ -10,12 +10,15 @@ import {
   Avatar,
   Chip
 } from "@material-tailwind/react";
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { authorsTableData, projectsTableData } from "@/data";
+import { UserContext } from '../../context/UserContext';
 
 export function Profile() {
 
+  const { role } = useContext(UserContext);
+  console.log(role)
   const [formData, setFormData] = useState({
     user_name: '',
     user_email: '',
@@ -31,6 +34,9 @@ export function Profile() {
     try {
       const response = await axios.post('http://localhost:8181/admin/addAdmin', formData);
       console.log('User registered:', response.data);
+
+      // بعد نجاح الإضافة، قم بإعادة جلب قائمة الإداريين مجددًا لتحديث العرض
+      await fetchAdmins();
     } catch (error) {
       console.error('Registration error:', error.response.data);
     }
@@ -46,16 +52,17 @@ export function Profile() {
   const [admins, setAdmins] = useState([]);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function fetchAdmins() {
-      try {
-        const response = await axios.get('http://localhost:8181/admin/getAdmins');
-        setAdmins(response.data);
-        console.log(response.data)
-      } catch (error) {
-        setError("Error fetching admins");
-      }
+
+  const fetchAdmins = async () => {
+    try {
+      const response = await axios.get('http://localhost:8181/admin/getAdmins');
+      setAdmins(response.data);
+      console.log(response.data);
+    } catch (error) {
+      setError("Error fetching admins");
     }
+  };
+  useEffect(() => {
     fetchAdmins();
   }, []);
 
@@ -65,7 +72,6 @@ export function Profile() {
 
   const handleUserDelete = async () => {
     try {
-      // Toggle the deleted status locally
       const updatedAdmins = admins.map(admin => {
         if (admin.user_id === adminId) {
           return { ...admin, deleted: !admin.deleted };
@@ -78,14 +84,13 @@ export function Profile() {
       const response = await axios.put(`http://localhost:8181/admin/deleteAdmin/${adminId}`);
       if (response.data === 'admin status updated') {
         setShowModal(false);
+
       }
     } catch (error) {
       console.error(`Error updating admin status with ID ${adminId}`, error);
       // Handle error case
     }
   };
-
-
 
   console.log(adminId)
   const openModal = (adminId) => {

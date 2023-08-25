@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const PORT = 8181;
+require('dotenv').config();
 
 //* middleware //
 app.use(express.json({ limit: '50mb' }));
@@ -41,6 +42,7 @@ app.use("/faqs", require('./routes/Faqs/Faqs'));
 app.use('/admin', require('./routes/Registration/registration'));
 app.use('/login', require('./routes/Registration/login'));
 
+app.use('/auth', require('./routes/Registration/auth'))
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

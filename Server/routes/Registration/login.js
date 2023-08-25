@@ -3,7 +3,8 @@ const pool = require('../../db');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); // Don't forget to import jwt and define SECRETKEY
 const SECRETKEY = "a24f41837ef05ad9e52a3794dab8c0055cc7baf383db5d19534454768751a344";
-console.log(SECRETKEY)
+// console.log(SECRETKEY)
+
 router.post('/login', async (req, res) => {
     const { user_email, user_password } = req.body;
     const sql = 'SELECT * FROM users WHERE user_email = $1';
@@ -11,7 +12,7 @@ router.post('/login', async (req, res) => {
     try {
         const allData = await pool.query(sql, [user_email]);
         const user = allData.rows[0]
-
+        console.log(user)
         if (!user) {
             return res.status(404).json("User not found");
         } else if (user.role !== "admin" && user.role !== "owner") {
@@ -30,6 +31,7 @@ router.post('/login', async (req, res) => {
                 role: user.role,
                 deleted: user.deleted,
             }, SECRETKEY);
+            console.log(token)
             return res.status(201).json({ token: token, message: 'User login successful', user_id: user.user_id });
         }
     } catch (error) {

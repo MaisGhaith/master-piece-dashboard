@@ -70,12 +70,6 @@ export const routes = [
         path: "/Details",
         element: <Details />,
       },
-      {
-        icon: <BellIcon {...icon} />,
-        name: "notifactions",
-        path: "/notifactions",
-        element: <Notifications />,
-      },
     ],
   },
   {
