@@ -13,9 +13,16 @@ import Orders from "./pages/dashboard/Orders";
 import BillingOrders from "./pages/dashboard/BillingOrders";
 import Faqs from "./pages/dashboard/Faqs";
 import Details from "./pages/dashboard/Details";
+
 // import '../src/style.css'
 const icon = {
   className: "w-5 h-5 text-inherit",
+};
+
+const handleLogout = () => {
+  localStorage.clear();
+  // توجيه المستخدم لصفحة تسجيل الدخول
+  // navigate("/sign-in");
 };
 
 export const routes = [
@@ -78,9 +85,9 @@ export const routes = [
     pages: [
       {
         icon: <ArrowRightOnRectangleIcon {...icon} />,
-        name: "sign in",
+        name: localStorage.getItem("token") ? "log out" : "sign in", // تغيير الاسم استنادًا إلى وجود التوكن
         path: "/sign-in",
-        element: <SignIn />,
+        element: <SignIn handleLogout={handleLogout} />, // تمرير دالة التسجيل وتسجيل الخروج
       },
       // {
       //   icon: <UserPlusIcon {...icon} />,

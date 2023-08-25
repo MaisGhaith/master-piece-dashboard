@@ -8,12 +8,21 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 
-export function SignIn() {
-  const navigate = useNavigate(); // Get the navigate function
+export function SignIn({ handleLogout }) {
+
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      handleLogout();
+    }
+  }, [handleLogout]);
+
 
   const [formData, setFormData] = useState({
     user_email: "",
@@ -39,8 +48,11 @@ export function SignIn() {
         formData
       );
       console.log("Login successful:", response.data);
-      console.log(response.data.token)
-      localStorage.setItem("token", response.data.token)
+      console.log(response.data.token);
+
+      // Store the token in localStorage
+      localStorage.setItem("token", response.data.token);
+      setIsLoggedIn(true);
 
       // Redirect the user to the desired page using navigate
       navigate("/dashboard/home");
@@ -49,6 +61,7 @@ export function SignIn() {
       setError("Invalid email or password");
     }
   };
+
 
   return (
     <>
