@@ -17,15 +17,12 @@ import {
 import useFunctions from "./ChoicesFunctions";
 import Details from "./Details";
 import { Link, useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root"); // Set the app element for accessibility
 
 function AddService() {
     const [service_id, setServiceId] = useState(null);
-
-    const navigate = useNavigate();
-
-    // const handleDetailsClick = () => {
-    //     navigate('/Details'); // Redirect to the "Details" route
-    // };
 
     const {
         getAllChoices,
@@ -56,8 +53,6 @@ function AddService() {
     const [selectedService, setSelectedService] = useState(null);
     const [newService, setNewService] = useState(null);
 
-    const cancelButtonRef = useRef(null);
-    const updatedServicesRef = useRef([]);
 
     // Function to handle file input change
     const onChange = (e) => {
@@ -150,14 +145,7 @@ function AddService() {
             .catch(function (error) {
                 console.log("Failed to edit data on the frontend:", error);
             });
-
-        const updatedService = {
-            ...service,
-            title,
-            image: img.name,
-        };
-
-        updatedServicesRef.current = showServices.map((s) => (s.id === service.id ? updatedService : s));
+        getServices();
         closeModal();
     };
 
@@ -191,40 +179,6 @@ function AddService() {
             getBase64(file);
         }
     };
-
-
-    // ! delete service 
-    // Function to delete service
-    const handleDelete = async (id) => {
-        const confirmed = await showConfirmationPrompt();
-        if (confirmed) {
-            try {
-                await axios.put(`http://localhost:8181/delete/deleteService/${id}`);
-                getServices(); // Refresh the service list after deletion
-                // setShowServices(prevdata => prevdata.filter(service => service.id !== id))
-            } catch (error) {
-                console.error("Error when trying to delete the service:", error);
-            }
-        }
-    };
-
-
-    const showConfirmationPrompt = () => {
-        return new Promise((resolve) => {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
-            }).then((result) => {
-                resolve(result.isConfirmed);
-            });
-        });
-    };
-
 
     // ! add choice modal 
     const [showModal, setShowModal] = useState(false);
@@ -263,11 +217,33 @@ function AddService() {
     };
 
 
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [serviceIdToDelete, setServiceIdToDelete] = useState(null);
+
+    const handleDelete = async (id) => {
+        setServiceIdToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDeleteConfirmed = async () => {
+        try {
+            await axios.put(`http://localhost:8181/delete/deleteService/${serviceIdToDelete}`);
+            setIsDeleteModalOpen(false);
+            getServices();
+        } catch (error) {
+            console.error("Error when trying to delete the service:", error);
+        }
+    };
+
+    const handleDeleteCanceled = () => {
+        setIsDeleteModalOpen(false);
+    };
+
     return (
 
         <Card className="mt-12 mb-8 flex flex-col gap-12">
-            <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
-                <Typography variant="h6" color="white">
+            <CardHeader variant="gradient" className="mb-8 p-6 bg-primary">
+                <Typography variant="h6" color="black">
                     Add service
                 </Typography>
             </CardHeader>
@@ -344,7 +320,7 @@ function AddService() {
                 <div>
                     <button
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-primary bg-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         onClick={handleSubmit}
                     >
                         Save
@@ -352,13 +328,9 @@ function AddService() {
                 </div>
             </form>
 
-
-            {/* Service List */}
-
             <h1 className='flex justify-center text-3xl text-black font-bold'>Services</h1>
 
             <div className="py-12 flex flex-wrap justify-center">
-                {/* {console.log(showServices)} */}
                 {showServices.map((service) => (
                     <div
 
@@ -376,118 +348,72 @@ function AddService() {
                                 alt={service.title}
                             ></img>
                         </div>
-                        {/* <button onClick={() => addChoice0(service)}>majddiiiiiiiiiii</button> */}
-
                         <div className="pt-10">
                             <div className="flex flex-col items-center">
                                 <h2 className="text-lg font-body text-black font-semibold">{service.title}</h2>
-                                <div className="flex justify-between items-center flex-col">
+                                <div className="flex justify-center items-center">
                                     <div className="flex justify-between items-center flex-col">
-                                        <button onClick={() => openModal(service)} className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
-                                            تعديل الخدمة
-                                        </button>
-                                        <button onClick={() => handleDelete(service.id)} className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
-                                            حذف الخدمة
-                                        </button>
-                                        <button onClick={() => addChoiceModal(service.id)} className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
-                                            إضافة خيارات
-                                        </button>
-                                        <button
-                                            onClick={() => getDataModal(service.id)}
-
-                                            // onClick={getDataModal}
-                                            className="border-2 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
-                                            عرض الخيارات
-                                        </button>
-
+                                        <div className="flex space-x-4">
+                                            <button onClick={() => openModal(service)} className="border-2 my-1 w-32 h-10 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                                Edit service
+                                            </button>
+                                            <button onClick={() => handleDelete(service.id)} className="border-2 my-1 w-32 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                                Delete service
+                                            </button>
+                                        </div>
+                                        <div className="flex space-x-4">
+                                            <button onClick={() => addChoiceModal(service.id)} className="border-2 h-10 my-1 w-32 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                                Add choices
+                                            </button>
+                                            <button onClick={() => getDataModal(service.id)} className="border-2 my-1  w-32 border-gray-800 rounded-lg px-3 text-gray-800 cursor-pointer hover:bg-gray-800 hover:text-gray-200">
+                                                View choices
+                                            </button>
+                                        </div>
                                         {service.id}
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
 
                 ))}
                 {showModal && (
-                    <div
-                        id="authentication-modal"
-                        tabIndex={-1}
-                        aria-hidden="true"
-                        className="fixed top-0 left-0 right-0 z-50 w-full h-screen flex items-center justify-center"
-                    >
-                        <div className="relative bg-white rounded-lg shadow">
-                            <button
-                                type="button"
-                                className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                                onClick={closeAddChoiceModal}
-                            >
-                                <svg
-                                    aria-hidden="true"
-                                    className="w-5 h-5"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                                <span className="sr-only">Close modal</span>
-                            </button>
-                            <div className="px-6 py-6 lg:px-8">
-                                <form className="space-y-6" action="#">
-                                    <div>
-                                        <input
-                                            type="hidden"
-                                            name="service_id"
-                                            value={service_id}
-                                            onChange={(e) => setServiceId(e.target.value)}
-                                            service_id={service_id}
-                                        />
+                    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center h-screen bg-black bg-opacity-60">
+                        <div className="flex justify-center flex-col items-center relative bg-white p-8 rounded-lg w-[400px]">
+                            <button onClick={closeAddChoiceModal}
+                                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 
-                                    </div>
+                            <p className="text-xl">Add choices</p>
+                            <div className="px-6 pt-6 lg:px-8">
+                                <form className="space-y-6">
+                                    <input
+                                        type="text"
+                                        name="choice"
+                                        id="choice"
+                                        className="input input-outline input-warning"
+                                        placeholder="Choice"
+                                        required=""
+                                        value={newChoice}
+                                        onChange={(e) => setNewChoice(e.target.value)}
+                                    />
                                     <div>
-                                        <label
-                                            htmlFor="email"
-                                            className="block mb-2 text-sm font-medium text-gray-900"
-                                        >
-                                            أضف الخيار
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="choice"
-                                            id="choice"
-                                            className="input input-outline input-success"
-                                            placeholder="الخيار"
-                                            required=""
-                                            value={newChoice}
-                                            onChange={(e) => setNewChoice(e.target.value)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label
-                                            htmlFor="choice"
-                                            className="block mb-2 text-sm font-medium text-gray-900"
-                                        >
-                                            أضف السعر
-                                        </label>
                                         <input
                                             type="text"
                                             name="price"
                                             id="price"
-                                            className="input input-outline input-success"
-                                            placeholder="السعر"
+                                            className="input input-outline border-warning"
+                                            placeholder="Price"
                                             required=""
                                             value={newPrice}
                                             onChange={(e) => setNewPrice(e.target.value)}
                                         />
                                     </div>
-                                    <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                        <button onClick={closeAddChoiceModal} data-modal-hide="bottom-right-modal" type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">إلغاء</button>
+                                    <div className="flex items-center justify-center p-2 space-x-2 rounded-b">
                                         <button onClick={() => addChoice(service_id) ? closeAddChoiceModal() : null}
-                                            data-modal-hide="bottom-right-modal" type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">إضافة </button>
+                                            data-modal-hide="bottom-right-modal" type="button" className="btn w-20 h-3 hover">Add </button>
+                                        <button onClick={closeAddChoiceModal} data-modal-hide="bottom-right-modal"
+                                            type="button" className="btn">Cancel</button>
                                     </div>
                                 </form>
                             </div>
@@ -496,10 +422,16 @@ function AddService() {
                 )}
                 {getModal && (
                     <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-75">
-                        <div className="bg-white rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-scroll">
+                        <div className="bg-white rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-scroll relative">
+                            <button
+                                onClick={closeGetDataModal}
+                                className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
+                            >
+                                ✕
+                            </button>
                             <div className="flex justify-center">
                                 <h3 className=" text-xl font-semibold text-gray-900 mb-4">
-                                    الخيارات
+                                    Details of Choices
                                 </h3>
                             </div>
                             <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
@@ -523,19 +455,16 @@ function AddService() {
                                         ) : (
                                             <div className="py-7" >
                                                 <div className="flex justify-center mt-2  my-4 ">
-                                                    <p>{choice.price}</p>
+                                                    <p className="mx-2">{choice.price}</p>
                                                     <p>{choice.choice}</p>
-
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <button onClick={() => deleteChoice(choice.id)} className="btn btn-outline btn-error w-20" >حذف</button>
-                                                    <button onClick={() => handleEdit(choice)} className="btn btn-outline btn-warning w-20 mx-5">تعديل</button>
                                                     <Link to={`/dashboard/Details?choiceId=${choice.id}`}>
-                                                        <button className="btn btn-outline btn-success w-20">إضافة تفاصيل</button>
+                                                        <button className="btn btn-outline btn-success w-20">Add details </button>
                                                     </Link>
-
+                                                    <button onClick={() => handleEdit(choice)} className="btn btn-outline btn-warning w-20 mx-5">Edit</button>
+                                                    <button onClick={() => deleteChoice(choice.id)} className="btn btn-outline btn-error w-20" >Delete</button>
                                                 </div>
-
                                             </div>
                                         )}
                                     </div>
@@ -543,150 +472,109 @@ function AddService() {
                             </div>
                             <div className="flex justify-center">
                                 <button
-                                    className=" text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900"
-                                    onClick={closeGetDataModal}
+                                    className="btn btn-outline btn-ghost mt-2 w-24"
+                                    onClick={closeGetDataModal} >Close </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {isDeleteModalOpen && (
+                    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center h-screen bg-black bg-opacity-40">
+                        <div className="bg-white p-6 rounded-lg">
+                            <h2 className="text-xl font-semibold mb-4">
+                                Confirm Delete
+                            </h2>
+                            <p className="mb-6">
+                                Are you sure you want to delete this Service ?
+                            </p>
+                            <div className="flex justify-end">
+                                <button
+                                    className="btn btn-red mr-2"
+                                    onClick={() => handleDeleteConfirmed()}
                                 >
-                                    إغلاق
+                                    Delete
+                                </button>
+                                <button
+                                    className="btn btn-gray"
+                                    onClick={() => handleDeleteCanceled(false)}
+                                >
+                                    Cancel
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
+                {open && (
+                    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center h-screen bg-black bg-opacity-60">
+                        <div className="flex justify-center flex-col items-center relative bg-white p-8 rounded-lg w-[400px]">
+                            <button onClick={closeModal}
+                                className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">✕</button>
+                            <p className="text-xl">Edit service</p>
+                            <div className="flex justify-center flex-col">
+                                <input type="text" name="edit-title" id="edit-title"
+                                    className="input input-warning my-5" value={title} onChange={(e) => setTitle(e.target.value)} />
 
-            </div>
-            <Transition.Root show={open} as={Fragment}>
-                <Dialog
-                    as="div"
-                    static
-                    className="fixed z-10 inset-0 overflow-y-auto"
-                    initialFocus={cancelButtonRef}
-                    open={open}
-                    onClose={closeModal}
-                >
-                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                        >
-                            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                        </Transition.Child>
-
-                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-                            &#8203;
-                        </span>
-
-                        <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                            enterTo="opacity-100 translate-y-0 sm:scale-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                        >
-                            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                    <div className="sm:flex justify-center sm:items-end">
-
-                                        <div className=" mt-3 text-center sm:mt-0 sm:ml-4 sm:text-right">
-                                            <Dialog.Title as="h3" className=" flex justify-center text-lg leading-6 font-medium text-gray-900">
-                                                تعديل الخدمة
-                                            </Dialog.Title>
-                                            <div className="mt-2">
-                                                <label
-                                                    htmlFor="edit-title"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    اسم الخدمة
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="edit-title"
-                                                    id="edit-title"
-                                                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    value={title}
-                                                    onChange={(e) => setTitle(e.target.value)}
+                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-warning border-dashed rounded-md">
+                                    <div className="space-y-1 text-center">
+                                        {img ? (
+                                            <div>
+                                                <img
+                                                    src={img}
+                                                    alt="Selected"
+                                                    className="mx-auto h-12 w-12 text-gray-400"
                                                 />
+                                                <p className="text-xs text-gray-500">Selected</p>
                                             </div>
-                                            <div className="mt-2">
-                                                <label
-                                                    htmlFor="edit-image"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    الصورة
-                                                </label>
-                                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                                    <div className="space-y-1 text-center">
-                                                        {img ? (
-                                                            <div>
-                                                                <img
-                                                                    src={img}
-                                                                    alt="Selected"
-                                                                    className="mx-auto h-12 w-12 text-gray-400"
-                                                                />
-                                                                <p className="text-xs text-gray-500">Selected</p>
-                                                            </div>
-                                                        ) : (
-                                                            <div>
+                                        ) : (
+                                            <div>
 
-                                                                <p className="text-xs text-gray-500">
-                                                                    PNG, JPG, GIF up to 10MB
-                                                                </p>
-                                                            </div>
-                                                        )}
-                                                        <div className="flex text-sm text-gray-600">
-                                                            <label
-                                                                htmlFor="edit-file-upload"
-                                                                className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                                                            >
-                                                                <span>Upload a file</span>
-                                                                <input
-                                                                    id="edit-file-upload"
-                                                                    name="edit-file-upload"
-                                                                    type="file"
-                                                                    className="sr-only"
-                                                                    accept="image/*"
-                                                                    onChange={onChange}
-                                                                />
-                                                            </label>
-                                                            <p className="pl-1">or drag and drop</p>
-                                                        </div>
-                                                        <p className="text-xs text-gray-500">
-                                                            PNG, JPG, GIF up to 10MB
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                                <p className="text-xs text-gray-500">
+                                                    PNG, JPG, GIF up to 10MB
+                                                </p>
                                             </div>
+                                        )}
+                                        <div className="flex text-sm text-gray-600">
+                                            <label
+                                                htmlFor="edit-file-upload"
+                                                className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                            >
+                                                <span>Upload a file</span>
+                                                <input
+                                                    id="edit-file-upload"
+                                                    name="edit-file-upload"
+                                                    type="file"
+                                                    className="sr-only"
+                                                    accept="image/*"
+                                                    onChange={onChange}
+                                                />
+                                            </label>
+                                            <p className="pl-1">or drag and drop</p>
                                         </div>
+                                        <p className="text-xs text-gray-500">
+                                            PNG, JPG, GIF up to 10MB
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="flex justify-center bg-gray-50 px-4 py-3 sm:px-6 sm:flex ">
-                                    <button
-                                        type="button"
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                        onClick={closeModal}
-                                        ref={cancelButtonRef}
-                                    >
-                                        إلغاء
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                        onClick={(e) => handleUpdate(e, selectedService)}
-                                    >
-                                        حفظ
-                                    </button>
-                                </div>
                             </div>
-                        </Transition.Child>
+                            <div className="flex justify-center mt-5 ">
+                                <button
+                                    type="submit"
+                                    className="btn w-20 "
+                                    onClick={(e) => handleUpdate(e, selectedService)}>Save
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn mx-3 w-20"
+                                    onClick={closeModal}
+                                > Cancel
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </Dialog>
-            </Transition.Root>
+
+                )}
+            </div>
+
         </Card >
     );
 }

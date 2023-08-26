@@ -38,11 +38,40 @@ const UsersFunctions = () => {
     }
 
 
+    const [activeUsers, setActiveUsers] = useState([]);
+    const fetchActiveUsers = async () => {
+        try {
+            const response = await axios.get("http://localhost:8181/getAllUsers/activeUsers");
+            setActiveUsers(response.data);
+        } catch (error) {
+            console.error("Error fetching active users:", error);
+        }
+    };
+    useEffect(() => {
+        fetchActiveUsers();
+    }, []);
+
+
+    const [deletedUsers, setDeletedUsers] = useState([]);
+    const fetchDeletedUsers = async () => {
+        try {
+            const response = await axios.get("http://localhost:8181/getAllUsers/deletedUsers");
+            setDeletedUsers(response.data);
+        } catch (error) {
+            console.error("Error fetching active users:", error);
+        }
+    };
+    useEffect(() => {
+        fetchDeletedUsers();
+    }, []);
+
 
 
     return {
         users,
-        removeUser
+        removeUser,
+        activeUsers,
+        deletedUsers
     }
 }
 

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useLocation } from 'react-router-dom';
-import { Card, Typography } from "@material-tailwind/react";
+import { Card, Typography, CardHeader, CardBody } from "@material-tailwind/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const Details = () => {
     const { id } = useParams();
@@ -116,104 +118,125 @@ const Details = () => {
 
 
     return (
-        <div className='flex flex-col items-center justify-center'>
-            <div className='flex overflow-y-auto flex-col mt-20 p-10 border-2 shadow-lg border-green-400 bg-gray-50 border-solid rounded-lg w-full sm:w-full md:3/4 lg:w-1/2 items-center justify-center'>
-                <p className='text-3xl'>إضافة خيارات</p>
-                <form onSubmit={submitDetails} className='mt-8 mb-2 w-80 max-w-screen-lg sm:w-96'>
-                    <div className='mb-4 flex flex-col items-center gap-6'>
-                        <input onChange={(e) => setPrice(e.target.value)} className='input input-success w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' type='text' placeholder='السعر' />
-                        <textarea onChange={(e) => setDesc(e.target.value)} className='textarea textarea-success my-5 w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' placeholder='الخيارات' />
-                        <button className='btn btn-outline btn-success' type='submit'>
-                            تأكيد
-                        </button>
-                    </div>
-                </form>
+        <div className='flex flex-col  justify-center'>
+            <div className='flex justify-center'>
+                <div className='flex overflow-y-auto flex-col mt-20 p-10 border-2 shadow-lg border-[#FBF0B2] bg-gray-50 border-solid rounded-lg w-full sm:w-full md:3/4 lg:w-1/2 items-center justify-center'>
+                    <p className='text-3xl'> Add Details</p>
+                    <form onSubmit={submitDetails} className='mt-8 mb-2 w-80 max-w-screen-lg sm:w-96'>
+                        <div className='mb-4 flex flex-col items-center gap-6'>
+                            <input onChange={(e) => setPrice(e.target.value)} className='input border-[#FBF0B2] w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' type='text' placeholder='Price' />
+                            <textarea onChange={(e) => setDesc(e.target.value)} className='textarea border-[#FBF0B2] my-5 w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' placeholder='Details' />
+                            <button className='btn btn-outline hover:bg-primary bg-amber-400 w-32  hover:text-black' type='submit'>
+                                Add details
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <div className='mt-20 mb-72'>
-
-                <Card className="h-full">
-                    <table className=" text-left">
-                        <thead>
-                            <tr>
-                                {TABLE_HEAD.map((head) => (
-                                    <th
-                                        key={head}
-                                        className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                                    >
-                                        <Typography
-                                            variant="small"
-                                            color="blue-gray"
-                                            className="font-normal leading-none opacity-70"
-                                        >
-                                            {head}
-                                        </Typography>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {getDetailsData.map(({ id, desc, price }, index) => {
-                                const isLast = index === getDetailsData.length - 1;
-                                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
-                                return (
-                                    <tr key={id}>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {id}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {desc}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {price}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <button
-                                                type="button"
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-medium mr-2"
-                                                onClick={() => openEditDialog(id)}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                type="button"
-                                                variant="small"
-                                                color="red"
-                                                className="font-medium"
-                                                onClick={() => handleDelete(id)}
-                                            >
-                                                Delete
-                                            </button>
-
-                                        </td>
+                <Card>
+                    <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-primary" >
+                        <Typography variant="h6" color="black">
+                            Details
+                        </Typography>
+                    </CardHeader>
+                    <CardBody className="px-0 pt-0 pb-2">
+                        <div className='overflow-auto h-56'>
+                            <table className="w-full min-w-[640px] table-auto">
+                                <thead>
+                                    <tr>
+                                        {[
+                                            'number',
+                                            'Details',
+                                            'Price',
+                                            'Edit',
+                                            'Delete',
+                                        ].map((el) => (
+                                            <th key={el} className="border-b border-blue-gray-50 py-3 px-5 text-left">
+                                                <Typography
+                                                    variant="small"
+                                                    className="text-[11px] font-bold uppercase text-blue-gray-400"
+                                                >
+                                                    {el}
+                                                </Typography>
+                                            </th>
+                                        ))}
                                     </tr>
-                                );
-                            })}
-                        </tbody>
+                                </thead>
+                                <tbody>
+                                    {getDetailsData.map(
+                                        (
+                                            { id, desc, price },
+                                            key
+                                        ) => {
+                                            const className = `py-3 px-5 ${key === getDetailsData.length - 1 ? '' : 'border-b border-blue-gray-50'
+                                                }`;
+
+                                            return (
+                                                <tr key={id}>
+                                                    <td className={className}>
+                                                        <div className="flex items-center gap-4">
+                                                            <div>
+                                                                <Typography
+                                                                    variant="small"
+                                                                    color="blue-gray"
+                                                                    className="font-semibold"
+                                                                >
+                                                                    {id}
+                                                                </Typography>
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className={className}>
+                                                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                                                            {desc}
+                                                        </Typography>
+                                                    </td>
+                                                    <td className={className}>
+                                                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                                                            {price}
+                                                        </Typography>
+                                                    </td>
+                                                    <td className={className}>
+                                                        <button
+                                                            type="button"
+                                                            variant="small"
+                                                            color="blue-gray"
+                                                            className="font-medium "
+                                                            onClick={() => openEditDialog(id)}
+                                                        >
+                                                            <FontAwesomeIcon icon={faPenToSquare} size='lg' className='hover:scale-105' style={{ color: "#dfdb5d", }} />
+                                                        </button>
+
+                                                    </td>
+                                                    <td className={className}>
+                                                        <button
+                                                            type="button"
+                                                            variant="small"
+                                                            color="red"
+                                                            className="font-medium pl-3"
+                                                            onClick={() => handleDelete(id)}
+                                                        >
+                                                            <FontAwesomeIcon icon={faTrashCan} size='lg' className='hover:scale-105' style={{ color: "#ce1c1c", }} />                                                    </button>
+
+                                                    </td>
 
 
-                    </table>
+
+
+                                                </tr>
+                                            );
+                                        }
+                                    )}
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </CardBody>
+
                 </Card>
 
                 {/* Edit Modal */}

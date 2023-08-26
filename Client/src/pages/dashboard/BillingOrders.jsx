@@ -62,116 +62,106 @@ const BillingOrders = () => {
     return (
         <div className="mt-12 mb-8 flex flex-col gap-12">
             <Card>
-                <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
-                    <Typography variant="h6" color="white">
+                <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-primary">
+                    <Typography variant="h6" color="black">
                         Billing orders
                     </Typography>
+                    <Typography variant="h6" color="black">
+                        {billingOrder.length}
+                    </Typography>
                 </CardHeader>
-                <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-                    <table className="w-full min-w-[640px] table-auto">
-                        <thead>
-                            <tr>
-                                {["Order id", "name", "Phone number", "Price", "Status", "Edit"].map((el) => (
-                                    <th
-                                        key={el}
-                                        className="border-b border-blue-gray-50 py-3 px-5 text-left"
-                                    >
-                                        <Typography
-                                            variant="small"
-                                            className="text-[11px] font-bold uppercase text-blue-gray-400"
+                <CardBody className="px-0 pt-0 pb-2">
+                    <div className='h-56 overflow-auto'>
+                        <table className="w-full min-w-[640px] table-auto">
+                            <thead>
+                                <tr>
+                                    {["Order id", "name", "Phone number", "Price", "Status", "Edit"].map((el) => (
+                                        <th
+                                            key={el}
+                                            className="border-b border-blue-gray-50 py-3 px-5 text-left"
                                         >
-                                            {el}
-                                        </Typography>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {billingOrder.map(({ id, user_id, name, price, phone, order_no, status }, key) => {
-                                const className = `py-3 px-5 ${key === authorsTableData.length - 1 ? "" : "border-b border-blue-gray-50"}`;
-                                return (
-                                    <tr key={user_id}>
-                                        <td className={className}>
-                                            <div className="flex items-center gap-4">
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {order_no}
-                                                </Typography>
-                                            </div>
-                                        </td>
-                                        <td className={className}>
-                                            <div>
-                                                <Typography variant="small" color="blue-gray" className="font-semibold">
-                                                    {name}
-                                                </Typography>
+                                            <Typography
+                                                variant="small"
+                                                className="text-[11px] font-bold uppercase text-blue-gray-400"
+                                            >
+                                                {el}
+                                            </Typography>
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {billingOrder.map(({ id, user_id, name, price, phone, order_no, status }, key) => {
+                                    const className = `py-3 px-5 ${key === authorsTableData.length - 1 ? "" : "border-b border-blue-gray-50"}`;
+                                    return (
+                                        <tr key={user_id}>
+                                            <td className={className}>
+                                                <div className="flex items-center gap-4">
+                                                    <Typography className="text-xs font-semibold text-blue-gray-600">
+                                                        {order_no}
+                                                    </Typography>
+                                                </div>
+                                            </td>
+                                            <td className={className}>
+                                                <div>
+                                                    <Typography variant="small" color="blue-gray" className="font-semibold">
+                                                        {name}
+                                                    </Typography>
 
-                                            </div>
-                                        </td>
-                                        <td className={className}>
-                                            <div>
-                                                <Typography variant="small" color="blue-gray" className="font-semibold">
-                                                    {phone}
-                                                </Typography>
+                                                </div>
+                                            </td>
+                                            <td className={className}>
+                                                <div>
+                                                    <Typography variant="small" color="blue-gray" className="font-semibold">
+                                                        {phone}
+                                                    </Typography>
 
-                                            </div>
-                                        </td>
-                                        <td className={className}>
-                                            <div>
-                                                <Typography variant="small" color="blue-gray" className="font-semibold">
-                                                    {price}
-                                                </Typography>
+                                                </div>
+                                            </td>
+                                            <td className={className}>
+                                                <div>
+                                                    <Typography variant="small" color="blue-gray" className="font-semibold">
+                                                        {price}
+                                                    </Typography>
 
-                                            </div>
-                                        </td>
-                                        <td className={className}>
-                                            <Chip
-                                                variant="gradient"
-                                                color={status ? 'green' : 'blue-gray'}
-                                                value={status ? 'Done' : 'In progress'}
-                                                className="py-0.5 px-2 text-[11px] font-medium"
-                                                onClick={() => handleChangeStatus(order_no)}
-                                            />
-                                        </td>
-                                        <td className={className}>
-                                            <div className="flex items-center gap-4">
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    <button onClick={() => handleOpenModal(id, price)}>
-                                                        ارسال الفاتورة
-                                                    </button>
-                                                </Typography>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                                                </div>
+                                            </td>
+                                            <td className={className}>
+                                                <Chip
+                                                    variant="gradient"
+                                                    color={status ? 'green' : 'blue-gray'}
+                                                    value={status ? 'Done' : 'In progress'}
+                                                    className="py-0.5 px-2 text-[11px] font-medium"
+                                                    onClick={() => handleChangeStatus(order_no)}
+                                                />
+                                            </td>
+                                            <td className={className}>
+                                                <div className="flex items-center gap-4">
+                                                    <Typography className="text-xs font-semibold text-blue-gray-600">
+                                                        <button onClick={() => handleOpenModal(id, price)}>
+                                                            ارسال الفاتورة
+                                                        </button>
+                                                    </Typography>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </CardBody>
             </Card>
             {openModal && (
-                <div className="fixed inset-0 flex items-center justify-center">
-                    <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 p-4">
+                <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center h-screen bg-black bg-opacity-40">
+                    <div className="bg-white p-6 rounded-lg relative">
+
                         <button
-                            type="button"
-                            className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-hide="authentication-modal"
-                            onClick={handleCloseModal} >
-                            <svg
-                                className="w-3 h-3"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 14 14"
-                            >
-                                <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                                />
-                            </svg>
-                            <span className="sr-only">Close modal</span>
-                        </button>
+                            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                            onClick={handleCloseModal}
+                        >
+                            ✕</button>
+
                         <div className="px-6 py-6 lg:px-8">
                             <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
                                 تعديل سعر الخدمة
@@ -180,7 +170,7 @@ const BillingOrders = () => {
                                 <div>
                                     <label
                                         htmlFor="email"
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        className="flex justify-center mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                     >
                                         قيمة الخدمة
                                     </label>
@@ -197,8 +187,9 @@ const BillingOrders = () => {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"                                >
-                                    Save
+                                    onClick={handleCloseModal}
+                                    className="w-full text-white bg-amber-300 hover:bg-primary hover:text-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                                    حفظ
                                 </button>
                             </form>
                         </div>
