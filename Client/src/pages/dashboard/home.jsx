@@ -30,6 +30,8 @@ import {
 import useUsers from './UsersFunctions'
 import { Link } from "react-router-dom";
 import useOrders from '../dashboard/OrdersFunctions'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartPie } from "@fortawesome/free-solid-svg-icons";
 
 export function Home() {
 
@@ -72,9 +74,9 @@ export function Home() {
                 </div>
                 <p className="text-sm text-blueGray-400 mt-4">
                   <span className="text-emerald-500 mr-2">
-                    <i className="fas fa-arrow-up" /> 2,99%{" "}
+                    <i className="fas fa-arrow-up" /> {" "}
                   </span>
-                  <span className="whitespace-nowrap"> Since last month </span>
+                  <span className="whitespace-nowrap"> </span>
                 </p>
               </div>
             </div>
@@ -107,26 +109,26 @@ export function Home() {
               </div>
             </div>
           </div>
-          {/* <div className="mt-4 w-full lg:w-6/12 xl:w-3/12 px-5">
+          <div className="mt-4 w-full lg:w-6/12 xl:w-3/12 px-5">
             <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
               <div className="flex-auto p-4">
                 <div className="flex flex-wrap">
                   <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
                     <h5 className="text-blueGray-400 uppercase font-bold text-xs">
-                      Orders
+                      All orders
                     </h5>
                     <span className="font-semibold text-xl text-blueGray-700">
                       {allOrders.length}
                     </span>
                   </div>
                   <div className="relative w-auto pl-4 flex-initial">
-                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-lightBlue-500">
-                      <i className="fa-solid fa-chart-simple" />
+                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-emerald-500">
+                      <FontAwesomeIcon icon={faChartPie} style={{ color: "#ffffff", }} />
                     </div>
                   </div>
                 </div>
                 <p className="text-sm text-blueGray-400 mt-4">
-                  <span className="text-red-500 mr-2">
+                  <span className="text-emerald-500 mr-2">
                   </span>
                   <Link to={"/dashboard/Orders"}>
                     <span className="text-yellow-300 hover:text-yellow-200 whitespace-nowrap"> Orders Page </span>
@@ -134,7 +136,7 @@ export function Home() {
                 </p>
               </div>
             </div>
-          </div> */}
+          </div>
           <div className="mt-4 w-full lg:w-6/12 xl:w-3/12 px-5">
             <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
               <div className="flex-auto p-4">
@@ -148,7 +150,7 @@ export function Home() {
                     </span>
                   </div>
                   <div className="relative w-auto pl-4 flex-initial">
-                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-emerald-500">
+                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full  bg-blue-500">
                       <i className="fa-solid fa-chart-simple" />
                     </div>
                   </div>
@@ -185,7 +187,7 @@ export function Home() {
           />
 
         ))}
-      </div>
+      </div> */}
       <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2">
           <CardHeader
@@ -312,7 +314,7 @@ export function Home() {
             </table>
           </CardBody>
         </Card>
-        <Card>
+        {/* <Card>
           <CardHeader
             floated={false}
             shadow={false}
@@ -367,8 +369,8 @@ export function Home() {
               )
             )}
           </CardBody>
-        </Card>
-      </div> */}
+        </Card> */}
+      </div>
     </div>
   );
 }

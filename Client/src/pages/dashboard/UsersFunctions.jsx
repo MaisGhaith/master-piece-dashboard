@@ -66,12 +66,46 @@ const UsersFunctions = () => {
     }, []);
 
 
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
+    // Filter the orders based on the search query for activeUsers
+    const filteredActiveUsers = activeUsers.filter((user) =>
+        user.user_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.user_email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.user_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.phone_number.includes(searchQuery)
+    );
+
+
+    const [searchDeleteQuery, setSearchDeleteQuery] = useState("");
+
+    const handleDeletedSearch = (query) => {
+        setSearchDeleteQuery(query);
+    }
+
+    const filteredDeletedUsers = deletedUsers.filter((user) =>
+        user.user_name.toLowerCase().includes(searchDeleteQuery.toLowerCase()) ||
+        user.user_email.toLowerCase().includes(searchDeleteQuery.toLowerCase()) ||
+        user.user_id.toLowerCase().includes(searchDeleteQuery.toLowerCase()) ||
+        user.phone_number.includes(searchDeleteQuery)
+    );
+
+
 
     return {
         users,
         removeUser,
         activeUsers,
-        deletedUsers
+        deletedUsers,
+        handleSearch,
+        filteredActiveUsers,
+        handleDeletedSearch,
+        filteredDeletedUsers,
+        searchQuery
     }
 }
 

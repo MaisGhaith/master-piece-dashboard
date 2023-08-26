@@ -1,25 +1,8 @@
-import React, { Fragment, useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Dialog, Transition } from "@headlessui/react";
-import Swal from 'sweetalert2';
-
-import {
-    Card,
-    CardHeader,
-    Typography,
-    CardBody,
-    Input,
-    Checkbox,
-    CardFooter,
-    Button,
-
-} from "@material-tailwind/react";
+import { Card, CardHeader, Typography, } from "@material-tailwind/react";
 import useFunctions from "./ChoicesFunctions";
-import Details from "./Details";
-import { Link, useNavigate } from "react-router-dom";
-import Modal from "react-modal";
-
-Modal.setAppElement("#root"); // Set the app element for accessibility
+import { Link } from "react-router-dom";
 
 function AddService() {
     const [service_id, setServiceId] = useState(null);
@@ -571,7 +554,6 @@ function AddService() {
                             </div>
                         </div>
                     </div>
-
                 )}
             </div>
 

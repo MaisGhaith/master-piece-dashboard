@@ -162,19 +162,20 @@ const BillingOrders = () => {
                         >
                             ✕</button>
 
-                        <div className="px-6 py-6 lg:px-8">
-                            <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+                        <div className="flex justify-center flex-col px-6 py-6 lg:px-8">
+                            <h3 className="mb-4 text-xl font-medium flex justify-center text-gray-900 dark:text-white">
                                 تعديل سعر الخدمة
                             </h3>
                             <form onSubmit={handleFormSubmit} className="space-y-6" action="#">
                                 <div>
-                                    <label
+                                    {/* <label
                                         htmlFor="email"
                                         className="flex justify-center mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                     >
                                         قيمة الخدمة
-                                    </label>
+                                    </label> */}
                                     <input
+                                        dir='rtl'
                                         type="text"
                                         name="price"
                                         id="price"
