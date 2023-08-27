@@ -14,6 +14,7 @@ import {
 import { authorsTableData } from '@/data';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import SearchBar from './SearchBar';
 
 const Faqs = () => {
 
@@ -120,18 +121,39 @@ const Faqs = () => {
     };
 
 
+    const [questionsSearchQuery, setQuestionsSearchQuery] = useState("");
 
+    const handleQuestionsSearch = (query) => {
+        setQuestionsSearchQuery(query);
+    };
+
+    // Filter the questions based on the search query
+    const filteredQuestions = questions.filter((question) => {
+        const lowercaseQuestion = question.question?.toLowerCase() || ""
+        const lowercaseAnswer = question.answer?.toLowerCase() || ""
+
+        return (
+            lowercaseQuestion.includes(questionsSearchQuery.toLowerCase()) ||
+            lowercaseAnswer.includes(questionsSearchQuery.toLowerCase())
+        )
+
+    })
 
     return (
         <div>
             <Card className='mt-10'>
-                <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-[#FBF0B2]">
+                <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 overflow-y-auto bg-primary ">
                     <Typography variant="h6" color="black">
                         Faqs
                     </Typography>
-                    <Typography variant="h6" color="white">
-
-                    </Typography>
+                    <div className="flex justify-center items-center flex-row">
+                        <Typography variant="h6" color="black">
+                            <SearchBar onSearch={handleQuestionsSearch} />
+                        </Typography>
+                        <Typography className="mx-5" variant="h6" color="black">
+                            Count :  {filteredQuestions.length}
+                        </Typography>
+                    </div>
                 </CardHeader>
                 <CardBody className="px-0 pt-0 pb-2">
                     <div className='h-56 overflow-auto'>
@@ -158,7 +180,7 @@ const Faqs = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {questions.map(
+                                {filteredQuestions.map(
                                     (
                                         { id, user_name, question, answer, display },
                                         key

@@ -4,6 +4,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Card, Typography, CardHeader, CardBody } from "@material-tailwind/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import SearchBar from './SearchBar';
 
 const Details = () => {
     const { id } = useParams();
@@ -56,10 +57,6 @@ const Details = () => {
 
     const [detailId, setDetailId] = useState(null)
 
-    // const getIdModal = (detail_id) => {
-    //     setDetailId(detail_id)
-    //     setOpenEditModal(true)
-    // }
     console.log(detailId)
 
     const [editedDesc, setEditedDesc] = useState('');
@@ -116,6 +113,25 @@ const Details = () => {
     const TABLE_HEAD = ["id", "Details", "Price", "properities"];
 
 
+    const [detailsDataSearchQuery, setDetailsDataSearchQuery] = useState("");
+
+    const handleDetailsDataSearch = (query) => {
+        setDetailsDataSearchQuery(query);
+    };
+
+    const filteredDetailsData = getDetailsData.filter((data) => {
+        const lowercaseDesc = data.desc?.toLowerCase() || "";
+        const lowercaseName = data.name?.toLowerCase() || "";
+        const lowercasePrice = data.price?.toString().toLowerCase() || ""; // Convert price to string
+
+        return (
+            lowercaseDesc.includes(detailsDataSearchQuery.toLowerCase()) ||
+            lowercaseName.includes(detailsDataSearchQuery.toLowerCase()) ||
+            lowercasePrice.includes(detailsDataSearchQuery.toLowerCase())
+        );
+    });
+
+
 
     return (
         <div className='flex flex-col  justify-center'>
@@ -136,10 +152,24 @@ const Details = () => {
 
             <div className='mt-20 mb-72'>
                 <Card>
-                    <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-primary" >
+                    {/* <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-primary" >
                         <Typography variant="h6" color="black">
                             Details
                         </Typography>
+
+                    </CardHeader> */}
+                    <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 overflow-y-auto bg-primary ">
+                        <Typography variant="h6" color="black">
+                            Details of choices
+                        </Typography>
+                        <div className="flex justify-center items-center flex-row">
+                            <Typography variant="h6" color="black">
+                                <SearchBar onSearch={handleDetailsDataSearch} />
+                            </Typography>
+                            <Typography className="mx-5" variant="h6" color="black">
+                                Count :  {filteredDetailsData.length}
+                            </Typography>
+                        </div>
                     </CardHeader>
                     <CardBody className="px-0 pt-0 pb-2">
                         <div className='overflow-auto h-56'>
@@ -165,7 +195,7 @@ const Details = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {getDetailsData.map(
+                                    {filteredDetailsData.map(
                                         (
                                             { id, desc, price },
                                             key

@@ -10,6 +10,7 @@ import { authorsTableData } from "@/data";
 import useBilling from './BillingOrdersFunctions';
 import axios from 'axios';
 import '../../../src/style.css'
+import SearchBar from './SearchBar';
 
 const BillingOrders = () => {
 
@@ -58,24 +59,55 @@ const BillingOrders = () => {
     };
 
 
+    const [billingOrderSearchQuery, setBillingOrderSearchQuery] = useState("");
+
+    const handleBillingOrderSearch = (query) => {
+        setBillingOrderSearchQuery(query);
+    };
+
+    const filteredBillingOrder = billingOrder.filter((order) => {
+        const lowercaseName = order.name?.toLowerCase() || "";
+        const lowercaseOrderNo = order.order_no?.toLowerCase() || "";
+        const phoneNumber = order.phone || "";
+
+        return (
+            lowercaseName.includes(billingOrderSearchQuery.toLowerCase()) ||
+            lowercaseOrderNo.includes(billingOrderSearchQuery.toLowerCase()) ||
+            phoneNumber.includes(billingOrderSearchQuery)
+        );
+    });
+
 
     return (
         <div className="mt-12 mb-8 flex flex-col gap-12">
             <Card>
-                <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-primary">
+                {/* <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-primary">
                     <Typography variant="h6" color="black">
                         Billing orders
                     </Typography>
                     <Typography variant="h6" color="black">
                         {billingOrder.length}
                     </Typography>
+                </CardHeader> */}
+                <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 overflow-y-auto bg-primary ">
+                    <Typography variant="h6" color="black">
+                        Billing orders
+                    </Typography>
+                    <div className="flex justify-center items-center flex-row">
+                        <Typography variant="h6" color="black">
+                            <SearchBar onSearch={handleBillingOrderSearch} />
+                        </Typography>
+                        <Typography className="mx-5" variant="h6" color="black">
+                            Count :  {filteredBillingOrder.length}
+                        </Typography>
+                    </div>
                 </CardHeader>
                 <CardBody className="px-0 pt-0 pb-2">
                     <div className='h-56 overflow-auto'>
                         <table className="w-full min-w-[640px] table-auto">
                             <thead>
                                 <tr>
-                                    {["Order id", "name", "Phone number", "Price", "Status", "Edit"].map((el) => (
+                                    {["Order no", "name", "Phone number", "Price", "Status", "Edit"].map((el) => (
                                         <th
                                             key={el}
                                             className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -91,7 +123,7 @@ const BillingOrders = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {billingOrder.map(({ id, user_id, name, price, phone, order_no, status }, key) => {
+                                {filteredBillingOrder.map(({ id, user_id, name, price, phone, order_no, status }, key) => {
                                     const className = `py-3 px-5 ${key === authorsTableData.length - 1 ? "" : "border-b border-blue-gray-50"}`;
                                     return (
                                         <tr key={user_id}>

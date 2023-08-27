@@ -43,6 +43,7 @@ const UsersFunctions = () => {
         try {
             const response = await axios.get("http://localhost:8181/getAllUsers/activeUsers");
             setActiveUsers(response.data);
+            fetchDeletedUsers();
         } catch (error) {
             console.error("Error fetching active users:", error);
         }
@@ -57,6 +58,7 @@ const UsersFunctions = () => {
         try {
             const response = await axios.get("http://localhost:8181/getAllUsers/deletedUsers");
             setDeletedUsers(response.data);
+            fetchActiveUsers();
         } catch (error) {
             console.error("Error fetching active users:", error);
         }

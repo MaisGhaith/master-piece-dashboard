@@ -3,6 +3,7 @@ import axios from "axios";
 import { Card, CardHeader, Typography, } from "@material-tailwind/react";
 import useFunctions from "./ChoicesFunctions";
 import { Link } from "react-router-dom";
+import SearchBar from "./SearchBar";
 
 function AddService() {
     const [service_id, setServiceId] = useState(null);
@@ -222,13 +223,38 @@ function AddService() {
         setIsDeleteModalOpen(false);
     };
 
+
+    const [servicesSearchQuery, setServicesSearchQuery] = useState("");
+
+    const handleServicesSearch = (query) => {
+        setServicesSearchQuery(query);
+    };
+
+    // Filter the services based on the search query
+    const filteredServices = showServices.filter((service) => {
+        const lowercaseServiceName = service.title?.toLowerCase() || "";
+
+        return lowercaseServiceName.includes(servicesSearchQuery.toLowerCase());
+    });
+
+
+
+
     return (
 
         <Card className="mt-12 mb-8 flex flex-col gap-12">
-            <CardHeader variant="gradient" className="mb-8 p-6 bg-primary">
+            <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 overflow-y-auto bg-primary ">
                 <Typography variant="h6" color="black">
                     Add service
                 </Typography>
+                <div className="flex justify-center items-center flex-row">
+                    <Typography variant="h6" color="black">
+                        <SearchBar onSearch={handleServicesSearch} />
+                    </Typography>
+                    <Typography className="mx-5" variant="h6" color="black">
+                        Count :  {filteredServices.length}
+                    </Typography>
+                </div>
             </CardHeader>
             <form className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md">
                 <div className="mb-6">
@@ -314,7 +340,7 @@ function AddService() {
             <h1 className='flex justify-center text-3xl text-black font-bold'>Services</h1>
 
             <div className="py-12 flex flex-wrap justify-center">
-                {showServices.map((service) => (
+                {filteredServices.map((service) => (
                     <div
 
                         key={service.id}

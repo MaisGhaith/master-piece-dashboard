@@ -104,7 +104,7 @@ export function Home() {
                 <div className="flex flex-wrap">
                   <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
                     <h5 className="text-blueGray-400 uppercase font-bold text-xs">
-                      New users
+                      users
                     </h5>
                     <span className="font-semibold text-xl text-blueGray-700">
                       {users.length}
@@ -259,7 +259,7 @@ export function Home() {
                     return (
                       <tr key={key}>
                         <td className={className}>
-                          <div className="flex items-center gap-4 cursor-not-allowed">
+                          <div className="flex items-center gap-4">
                             <Typography
                               variant="small"
                               color="blue-gray"

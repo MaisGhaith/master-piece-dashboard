@@ -24,7 +24,7 @@ router.get("/activeUsers", async (req, res) => {
 
 router.get("/deletedUsers", async (req, res) => {
     try {
-        const activeUsers = await pool.query("SELECT * FROM users WHERE deleted = true ORDER BY register_date DESC ");
+        const activeUsers = await pool.query("SELECT * FROM users WHERE deleted = true AND role = 'user' ORDER BY register_date DESC ");
         res.json(activeUsers.rows);
     } catch (error) {
         res.status(500).json(error, "Server error, can't get active users data from db")
