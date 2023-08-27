@@ -55,7 +55,8 @@ export function SignIn({ handleLogout }) {
       setIsLoggedIn(true);
 
       // Redirect the user to the desired page using navigate
-      navigate("/dashboard/home");
+      // navigate("/dashboard/home");
+      window.location.href = '/dashboard/home'
     } catch (error) {
       console.log(error);
       setError("Invalid email or password");

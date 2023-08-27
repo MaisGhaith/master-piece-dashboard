@@ -4,6 +4,7 @@ import { AdminDashboard } from "@/layouts";
 import { UserContext } from './context/UserContext';
 import '../src/style.css';
 import { useContext } from "react";
+import { SignIn } from "./pages/auth";
 function App() {
   const { role } = useContext(UserContext);
   console.log(role);
@@ -11,7 +12,7 @@ function App() {
   return (
     <Routes>
       {role === undefined && (
-        <Route path="/dashboard/*" element={<AdminDashboard />} />
+        <Route path="/signIn/*" element={<SignIn />} />
       )}
 
       {role === 'admin' && (

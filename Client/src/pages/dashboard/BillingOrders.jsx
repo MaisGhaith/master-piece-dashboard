@@ -81,14 +81,6 @@ const BillingOrders = () => {
     return (
         <div className="mt-12 mb-8 flex flex-col gap-12">
             <Card>
-                {/* <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 bg-primary">
-                    <Typography variant="h6" color="black">
-                        Billing orders
-                    </Typography>
-                    <Typography variant="h6" color="black">
-                        {billingOrder.length}
-                    </Typography>
-                </CardHeader> */}
                 <CardHeader variant="gradient" className="flex justify-between mb-8 p-6 overflow-y-auto bg-primary ">
                     <Typography variant="h6" color="black">
                         Billing orders
@@ -200,12 +192,6 @@ const BillingOrders = () => {
                             </h3>
                             <form onSubmit={handleFormSubmit} className="space-y-6" action="#">
                                 <div>
-                                    {/* <label
-                                        htmlFor="email"
-                                        className="flex justify-center mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                    >
-                                        قيمة الخدمة
-                                    </label> */}
                                     <input
                                         dir='rtl'
                                         type="text"
