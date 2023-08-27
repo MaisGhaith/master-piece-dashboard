@@ -1,53 +1,70 @@
-import React from "react";
-import {
-  Typography,
-  Card,
-  CardHeader,
-  CardBody,
-  IconButton,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Avatar,
-  Tooltip,
-  Progress,
-} from "@material-tailwind/react";
-import {
-  ClockIcon,
-  CheckIcon,
-  EllipsisVerticalIcon,
-  ArrowUpIcon,
-} from "@heroicons/react/24/outline";
-import { StatisticsCard } from "@/widgets/cards";
-import { StatisticsChart } from "@/widgets/charts";
-import {
-  statisticsCardsData,
-  statisticsChartsData,
-  projectsTableData,
-  ordersOverviewData,
-} from "@/data";
+import React, { useEffect, useState } from "react";
+import { Typography, Card, CardHeader, CardBody, IconButton, Menu, MenuHandler, MenuList, MenuItem, Progress, } from "@material-tailwind/react";
+import { CheckIcon, EllipsisVerticalIcon, } from "@heroicons/react/24/outline";
 import useUsers from './UsersFunctions'
 import { Link } from "react-router-dom";
 import useOrders from '../dashboard/OrdersFunctions'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartPie } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export function Home() {
 
   const { users } = useUsers();
   const { allOrders, doneOrders, totalMoney } = useOrders();
 
+  const [statistics, setStatistics] = useState([]);
+  const [sortBy, setSortBy] = useState("total_orders");
+
+  useEffect(() => {
+    fetchStatistics();
+  }, []);
+
+  const fetchStatistics = async () => {
+    try {
+      const response = await axios.get('http://localhost:8181/statistic/getStatistics');
+      sortServices(sortBy);
+      setStatistics(response.data);
+      console.log(response)
+      // console.log(response.data.rows.service_deleted)
+    } catch (error) {
+      console.error("Error fetching statistics:", error);
+    }
+  };
+
+  const sortServices = (sortBy) => {
+    const sortedServices = [...statistics];
+
+    sortedServices.sort((a, b) => {
+      if (sortBy === "total_orders") {
+        return b.total_orders - a.total_orders;
+      } else if (sortBy === "total_money") {
+        return b.total_money - a.total_money;
+      } else if (sortBy === "completion_percentage") {
+        return b.completion_percentage - a.completion_percentage;
+      } else if (sortBy === "service_deleted") {
+        if (a.service_deleted && !b.service_deleted) {
+          return 1;
+        } else if (!a.service_deleted && b.service_deleted) {
+          return -1;
+        }
+        return 0;
+      }
+    });
+
+    setStatistics(sortedServices);
+  };
+  const handleSortClick = (type) => {
+    sortServices(type);
+    setSortBy(type);
+  };
+
 
 
   return (
-    <div className="mt-12">
+    <div className=" flex justify-center flex-col mt-12">
 
       <>
-        {/* <link
-          rel="stylesheet"
-          href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
-        /> */}
         <link
           rel="stylesheet"
           href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
@@ -166,30 +183,9 @@ export function Home() {
             </div>
           </div>
         </div>
-
       </>
-
-
-      {/* <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
-        {statisticsChartsData.map((props) => (
-          <StatisticsChart
-            key={props.title}
-            {...props}
-            footer={
-              <Typography
-                variant="small"
-                className="flex items-center font-normal text-blue-gray-600"
-              >
-                <ClockIcon strokeWidth={2} className="h-4 w-4 text-inherit" />
-                &nbsp;{props.footer}
-              </Typography>
-            }
-          />
-
-        ))}
-      </div> */}
-      <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <Card className="overflow-hidden xl:col-span-2">
+      <div className="mb-10 mx-5">
+        <Card className="xl:col-span-2">
           <CardHeader
             floated={false}
             shadow={false}
@@ -198,7 +194,7 @@ export function Home() {
           >
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-1">
-                Projects
+                Services
               </Typography>
               <Typography
                 variant="small"
@@ -219,17 +215,26 @@ export function Home() {
                 </IconButton>
               </MenuHandler>
               <MenuList>
-                <MenuItem>Action</MenuItem>
-                <MenuItem>Another Action</MenuItem>
-                <MenuItem>Something else here</MenuItem>
+                <MenuItem onClick={() => handleSortClick("total_orders")}>
+                  Order by total orders
+                </MenuItem>
+                <MenuItem onClick={() => handleSortClick("total_money")}>
+                  Order by total money
+                </MenuItem>
+                <MenuItem onClick={() => handleSortClick("completion_percentage")} >
+                  Order by completion percentage
+                </MenuItem>
+                <MenuItem onClick={() => handleSortClick("service_deleted")} >
+                  Order by deleted
+                </MenuItem>
               </MenuList>
             </Menu>
           </CardHeader>
-          <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+          <CardBody className="h-56 overflow-auto px-0 pt-0 pb-2">
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["companies", "members", "budget", "completion"].map(
+                  {["Services", "number of orders", "total money", "Done"].map(
                     (el) => (
                       <th
                         key={el}
@@ -247,47 +252,40 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {projectsTableData.map(
-                  ({ img, name, members, budget, completion }, key) => {
-                    const className = `py-3 px-5 ${key === projectsTableData.length - 1
-                      ? ""
-                      : "border-b border-blue-gray-50"
-                      }`;
-
+                {statistics.map(
+                  ({ service_name, total_orders, total_money, completion_percentage, service_deleted }, key) => {
+                    const className = `py-3 px-5 ${key === statistics.length - 1 ? "" : "border-b border-blue-gray-50"
+                      } ${service_deleted ? "bg-gray-300 cursor-not-allowed" : ""}`;
                     return (
-                      <tr key={name}>
+                      <tr key={key}>
                         <td className={className}>
-                          <div className="flex items-center gap-4">
-                            <Avatar src={img} alt={name} size="sm" />
+                          <div className="flex items-center gap-4 cursor-not-allowed">
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {name}
+                              {service_name}
                             </Typography>
                           </div>
                         </td>
                         <td className={className}>
-                          {members.map(({ img, name }, key) => (
-                            <Tooltip key={name} content={name}>
-                              <Avatar
-                                src={img}
-                                alt={name}
-                                size="xs"
-                                variant="circular"
-                                className={`cursor-pointer border-2 border-white ${key === 0 ? "" : "-ml-2.5"
-                                  }`}
-                              />
-                            </Tooltip>
-                          ))}
+                          <div className="flex items-center gap-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-bold"
+                            >
+                              {total_orders}
+                            </Typography>
+                          </div>
                         </td>
                         <td className={className}>
                           <Typography
                             variant="small"
                             className="text-xs font-medium text-blue-gray-600"
                           >
-                            {budget}
+                            {total_money}
                           </Typography>
                         </td>
                         <td className={className}>
@@ -296,12 +294,18 @@ export function Home() {
                               variant="small"
                               className="mb-1 block text-xs font-medium text-blue-gray-600"
                             >
-                              {completion}%
+                              {completion_percentage < 100 ? completion_percentage.toFixed(2) : "100.00"}%
                             </Typography>
                             <Progress
-                              value={completion}
+                              value={completion_percentage}
                               variant="gradient"
-                              color={completion === 100 ? "green" : "blue"}
+                              color={
+                                completion_percentage <= 20
+                                  ? "red"
+                                  : completion_percentage === 100
+                                    ? "green"
+                                    : "blue"
+                              }
                               className="h-1"
                             />
                           </div>
@@ -311,65 +315,10 @@ export function Home() {
                   }
                 )}
               </tbody>
+
             </table>
           </CardBody>
         </Card>
-        {/* <Card>
-          <CardHeader
-            floated={false}
-            shadow={false}
-            color="transparent"
-            className="m-0 p-6"
-          >
-            <Typography variant="h6" color="blue-gray" className="mb-2">
-              Orders Overview
-            </Typography>
-            <Typography
-              variant="small"
-              className="flex items-center gap-1 font-normal text-blue-gray-600"
-            >
-              <ArrowUpIcon
-                strokeWidth={3}
-                className="h-3.5 w-3.5 text-green-500"
-              />
-              <strong>24%</strong> this month
-            </Typography>
-          </CardHeader>
-          <CardBody className="pt-0">
-            {ordersOverviewData.map(
-              ({ icon, color, title, description }, key) => (
-                <div key={title} className="flex items-start gap-4 py-3">
-                  <div
-                    className={`relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50 after:content-[''] ${key === ordersOverviewData.length - 1
-                      ? "after:h-0"
-                      : "after:h-4/6"
-                      }`}
-                  >
-                    {React.createElement(icon, {
-                      className: `!w-5 !h-5 ${color}`,
-                    })}
-                  </div>
-                  <div>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="block font-medium"
-                    >
-                      {title}
-                    </Typography>
-                    <Typography
-                      as="span"
-                      variant="small"
-                      className="text-xs font-medium text-blue-gray-500"
-                    >
-                      {description}
-                    </Typography>
-                  </div>
-                </div>
-              )
-            )}
-          </CardBody>
-        </Card> */}
       </div>
     </div>
   );

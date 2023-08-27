@@ -41,8 +41,10 @@ app.use("/faqs", require('./routes/Faqs/Faqs'));
 // ! register
 app.use('/admin', require('./routes/Registration/registration'));
 app.use('/login', require('./routes/Registration/login'));
-
 app.use('/auth', require('./routes/Registration/auth'))
+
+// ! getStatistics for services 
+app.use('/statistic', require('./routes/ServicesRoutes/statisticsServices'))
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
