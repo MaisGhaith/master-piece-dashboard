@@ -41,16 +41,16 @@ router.post("/addChoice/:service_id", async (req, res) => {
 
 router.post('/details/:choice_id', async (req, res) => {
     const { choice_id } = req.params;
-    const { desc, price } = req.body;
-    console.log(choice_id, desc, price)
+    const { desc, price, title, type } = req.body;
+    console.log(choice_id, desc, price, title, type)
 
     try {
         const query = `
-            INSERT INTO details ("desc", price, choice_id)
-            VALUES ($1, $2, $3)
+            INSERT INTO details ("desc", price, choice_id, title, type)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *;
         `;
-        const values = [desc, price, choice_id];
+        const values = [desc, price, choice_id, title, type];
 
         const result = await pool.query(query, values);
         res.status(201).json(result.rows[0]);

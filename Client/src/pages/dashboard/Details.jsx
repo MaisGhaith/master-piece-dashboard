@@ -14,12 +14,8 @@ const Details = () => {
 
     const [desc, setDesc] = useState('');
     const [price, setPrice] = useState('');
-
-    const [openDetails, setOpenDetails] = useState(false);
-
-    const handleClose = () => {
-        setOpenDetails(false); // Close the dialog
-    };
+    const [title, setTitle] = useState('');
+    const [type, setType] = useState('');
 
     const submitDetails = async (e) => {
         e.preventDefault();
@@ -27,15 +23,25 @@ const Details = () => {
             const response = await axios.post(`http://localhost:8181/addChoices/details/${choiceId}`, {
                 desc,
                 price,
-                choiceId
+                choiceId,
+                type,
+                title,
             });
             console.log('Data inserted successfully:', response.data);
+
+            // Clear the form fields
+            setDesc('');
+            setType('');
+            setTitle('');
+            setPrice('');
+
             // Update the frontend as needed
             await getDetails();
         } catch (error) {
             console.error('Error inserting data:', error);
         }
     };
+
 
     const [getDetailsData, setGetDetailsData] = useState([]);
     const getDetails = async () => {
@@ -140,8 +146,10 @@ const Details = () => {
                     <p className='text-3xl'> Add Details</p>
                     <form onSubmit={submitDetails} className='mt-8 mb-2 w-80 max-w-screen-lg sm:w-96'>
                         <div className='mb-4 flex flex-col items-center gap-6'>
-                            <input onChange={(e) => setPrice(e.target.value)} className='input border-[#FBF0B2] w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' type='text' placeholder='Price' />
-                            <textarea onChange={(e) => setDesc(e.target.value)} className='textarea border-[#FBF0B2] my-5 w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' placeholder='Details' />
+                            <input onChange={(e) => setTitle(e.target.value)} required className='input border-[#FBF0B2] w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' type='text' placeholder='Title of details' />
+                            <input onChange={(e) => setPrice(e.target.value)} required className='input border-[#FBF0B2] w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' type='text' placeholder='Price' />
+                            <input onChange={(e) => setType(e.target.value)} className='input border-[#FBF0B2] w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' type='text' placeholder='Type' />
+                            <textarea onChange={(e) => setDesc(e.target.value)} required className='textarea border-[#FBF0B2] my-5 w-3/4 sm:w-3/4 md:w-3/4 lg:w-full' placeholder='Details' />
                             <button className='btn btn-outline hover:bg-primary bg-amber-400 w-32  hover:text-black' type='submit'>
                                 Add details
                             </button>
@@ -178,6 +186,8 @@ const Details = () => {
                                     <tr>
                                         {[
                                             'number',
+                                            'Title',
+                                            'type',
                                             'Details',
                                             'Price',
                                             'Edit',
@@ -197,7 +207,7 @@ const Details = () => {
                                 <tbody>
                                     {filteredDetailsData.map(
                                         (
-                                            { id, desc, price },
+                                            { id, desc, price, type, title },
                                             key
                                         ) => {
                                             const className = `py-3 px-5 ${key === getDetailsData.length - 1 ? '' : 'border-b border-blue-gray-50'
@@ -208,16 +218,21 @@ const Details = () => {
                                                     <td className={className}>
                                                         <div className="flex items-center gap-4">
                                                             <div>
-                                                                <Typography
-                                                                    variant="small"
-                                                                    color="blue-gray"
-                                                                    className="font-semibold"
-                                                                >
+                                                                <Typography variant="small" color="blue-gray" className="font-semibold" >
                                                                     {id}
                                                                 </Typography>
-
                                                             </div>
                                                         </div>
+                                                    </td>
+                                                    <td className={className}>
+                                                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                                                            {title}
+                                                        </Typography>
+                                                    </td>
+                                                    <td className={className}>
+                                                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                                                            {type}
+                                                        </Typography>
                                                     </td>
                                                     <td className={className}>
                                                         <Typography className="text-xs font-semibold text-blue-gray-600">
