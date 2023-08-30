@@ -130,7 +130,6 @@ const OrdersFunctions = () => {
 
     // ! get total money 
     const [totalMoney, setTotalMoney] = useState(null);
-    console.log(totalMoney)
     const fetchTotalOrderPrice = async () => {
         try {
             const response = await axios.get("http://localhost:8181/orders/orderPrice"); // Replace with your backend endpoint

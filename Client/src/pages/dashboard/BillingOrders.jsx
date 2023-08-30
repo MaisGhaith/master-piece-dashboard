@@ -43,6 +43,7 @@ const BillingOrders = () => {
             });
             console.log('Price has been edited successfully');
             await getBillingOrders();
+            setOpenModal(false);
         } catch (error) {
             console.log("Failed to edit price", error);
         }
@@ -54,6 +55,7 @@ const BillingOrders = () => {
 
     const handleFormSubmit = (e) => {
         e.preventDefault(); // Prevent form submission to avoid page refresh
+
         editPrice(id, editedPrice);
         console.log(editedPrice)
     };
@@ -190,7 +192,7 @@ const BillingOrders = () => {
                             <h3 className="mb-4 text-xl font-medium flex justify-center text-gray-900 dark:text-white">
                                 تعديل سعر الخدمة
                             </h3>
-                            <form onSubmit={handleFormSubmit} className="space-y-6" action="#">
+                            <form onSubmit={handleFormSubmit} className="space-y-6" action="handleSubmit">
                                 <div>
                                     <input
                                         dir='rtl'
@@ -206,7 +208,7 @@ const BillingOrders = () => {
                                 </div>
                                 <button
                                     type="submit"
-                                    onClick={handleCloseModal}
+                                    // onClick={handleCloseModal}
                                     className="w-full text-white bg-amber-300 hover:bg-primary hover:text-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                                     حفظ
                                 </button>

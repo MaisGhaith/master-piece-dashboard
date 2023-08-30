@@ -5,6 +5,8 @@ export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
 
+    const [sideNavColor, setSidenavColor] = useState("Yellow-Chiffon");
+
     const [userId, setUserId] = useState()
     const [userName, setUserName] = useState();
     const [role, setRole] = useState();
@@ -61,6 +63,7 @@ const UserProvider = ({ children }) => {
                     setRole,
                     phone,
                     email,
+                    sideNavColor
 
                 }}
             >

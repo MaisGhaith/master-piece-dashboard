@@ -10,6 +10,7 @@ import axios from "axios";
 
 export function Home() {
 
+
   const { users } = useUsers();
   const { allOrders, doneOrders, totalMoney } = useOrders();
 
@@ -201,7 +202,7 @@ export function Home() {
                 className="flex items-center gap-1 font-normal text-blue-gray-600"
               >
                 <CheckIcon strokeWidth={3} className="h-4 w-4 text-blue-500" />
-                <strong>30 done</strong> this month
+                {/* <strong>30 done</strong> this month */}
               </Typography>
             </div>
             <Menu placement="left-start">

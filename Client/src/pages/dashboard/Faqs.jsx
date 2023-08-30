@@ -220,29 +220,11 @@ const Faqs = () => {
                                                     </button>
                                                 </td>
                                                 <td className={className}>
-                                                    {expandedAnswers[id] ? (
-                                                        <div>
-                                                            {answer}
-                                                            <button
-                                                                className="text-yellow-500"
-                                                                onClick={() => toggleAnswerExpansion(id)}
-                                                            >
-                                                                إخفاء
-                                                            </button>
-                                                        </div>
-                                                    ) : (
-                                                        <div>
-                                                            {answer}
-                                                            {!expandedAnswers[id] && answer && answer.split(' ').length > 3 && (
-                                                                <button
-                                                                    className={showFullText ? "text-yellow-500" : "text-green-500"}
-                                                                    onClick={() => toggleAnswerExpansion(id)}
-                                                                >
-                                                                    {showFullText ? "إخفاء" : "اقرأ المزيد"}
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    )}
+
+                                                    {answer}
+
+
+
                                                 </td>
 
 
